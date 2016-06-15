@@ -74,7 +74,7 @@ public class RestService extends NanoHTTPD {
 			}
 		}
 
-		if (!handled) {
+		if (!handled && response.getDataLength() < 1) {
 			String msg = "Request " + request.getCommand() + " has no handler found.";
 			DriverUtils.log(Level.INFO, TAG, msg);
 			response.setStatus(Status.INTERNAL_ERROR);
@@ -88,7 +88,6 @@ public class RestService extends NanoHTTPD {
 		return newFixedLengthResponse(status, mimeType, data, totalBytes);
 	}
 
-	
 	private Response responseInvalidRestRequest(IHTTPSession session) {
 		String rstMessage = "bad request: " + session.getUri();
 		if (session.getQueryParameterString() != null) {

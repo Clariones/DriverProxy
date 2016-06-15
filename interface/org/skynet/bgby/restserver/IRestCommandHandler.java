@@ -6,4 +6,5 @@ import org.skynet.bgby.protocol.IRestRequest;
 public interface IRestCommandHandler {
 	public IRestResponse handleCommand(IRestRequest restRequest);
 
+	public String getUsage();
 }

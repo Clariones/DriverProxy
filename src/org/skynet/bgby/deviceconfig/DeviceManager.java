@@ -1,6 +1,4 @@
-package org.skynet.bgby.driverproxy;
-
-import org.skynet.bgby.device.DeviceConfigData;
+package org.skynet.bgby.deviceconfig;
 
 public class DeviceManager {
 

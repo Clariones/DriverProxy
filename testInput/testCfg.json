@@ -1,0 +1,7 @@
+{
+    connectionTimeout:30000,
+    multicastAddress:"224.0.0.4",
+    multicastPort:8982,
+    readTimeout:30000,
+    restServicePort:8981
+}

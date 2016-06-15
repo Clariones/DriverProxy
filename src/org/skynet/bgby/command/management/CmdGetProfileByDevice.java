@@ -1,4 +1,4 @@
-package org.skynet.bgby.protocol.restmanagecommand;
+package org.skynet.bgby.command.management;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,11 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.skynet.bgby.device.DeviceConfigData;
-import org.skynet.bgby.device.DeviceProfile;
-import org.skynet.bgby.driverproxy.DeviceManager;
-import org.skynet.bgby.driverproxy.DeviceProfileManager;
-import org.skynet.bgby.driverproxy.LayoutConfigManager;
+import org.skynet.bgby.deviceconfig.DeviceConfigData;
+import org.skynet.bgby.deviceprofile.DeviceProfile;
 import org.skynet.bgby.layout.ILayout;
 import org.skynet.bgby.layout.ILayoutGroup;
 import org.skynet.bgby.layout.LayoutUtils;
@@ -19,37 +16,10 @@ import org.skynet.bgby.protocol.IRestResponse;
 import org.skynet.bgby.protocol.RestResponseImpl;
 import org.skynet.bgby.restserver.IRestCommandHandler;
 
-public class CmdGetProfileByDevice implements IRestCommandHandler{
+public class CmdGetProfileByDevice extends BaseManageCmd implements IRestCommandHandler{
 	public static final String CMD = "getDeviceProfiles";
 	private static final int ERROR_CODE_BASE = 10000;
-	protected DeviceProfileManager profileManager;
-	protected LayoutConfigManager layoutManager;
-	protected DeviceManager deviceManager;
 	
-	public DeviceManager getDeviceManager() {
-		return deviceManager;
-	}
-
-	public void setDeviceManager(DeviceManager deviceManager) {
-		this.deviceManager = deviceManager;
-	}
-
-	public DeviceProfileManager getProfileManager() {
-		return profileManager;
-	}
-
-	public void setProfileManager(DeviceProfileManager profileManager) {
-		this.profileManager = profileManager;
-	}
-
-	public LayoutConfigManager getLayoutManager() {
-		return layoutManager;
-	}
-
-	public void setLayoutManager(LayoutConfigManager layoutManager) {
-		this.layoutManager = layoutManager;
-	}
-
 	@Override
 	public IRestResponse handleCommand(IRestRequest restRequest) {
 		String controllerID = restRequest.getTarget();
@@ -67,13 +37,13 @@ public class CmdGetProfileByDevice implements IRestCommandHandler{
 		Map<String, String> deviceProfileNames = new HashMap<>();
 		Map<String, DeviceProfile> profiles = new HashMap<>();
 		for(String devId: deviceIds){
-			DeviceConfigData cfgData = getDeviceManager().getDeviceConfigData(devId);
+			DeviceConfigData cfgData = getDeviceConfigManager().getDeviceConfigData(devId);
 			String profileID = cfgData.getProfile();
 			deviceProfileNames.put(devId, profileID);
 			if (profiles.containsKey(profileID)){
 				continue;
 			}
-			profiles.put(profileID, getProfileManager().getProfile(profileID));
+			profiles.put(profileID, getDeviceProfileManager().getProfile(profileID));
 		}
 		
 		DeviceProfilesRestResult result = new DeviceProfilesRestResult();
@@ -134,5 +104,16 @@ public class CmdGetProfileByDevice implements IRestCommandHandler{
 		public void setDevices(Map<String, String> devices) {
 			this.devices = devices;
 		}
+	}
+
+	@Override
+	public String getUsage() {
+		return getCommand() + ": Get the device profiles which layouted in required controller.\r\n" + "Example:    http://<ip:port>/"
+				+ getCommand() + "/<controller ID>";
+	}
+
+	@Override
+	public String getCommand() {
+		return CMD;
 	}
 }

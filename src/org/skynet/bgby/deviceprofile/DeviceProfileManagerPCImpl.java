@@ -1,11 +1,9 @@
-package org.skynet.bgby.driverproxy;
+package org.skynet.bgby.deviceprofile;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.skynet.bgby.device.DeviceProfile;
-
-public class DeviceProfileManager {
+public class DeviceProfileManagerPCImpl implements DeviceProfileManager {
 
 	public DeviceProfile getProfile(String profileID) {
 		DeviceProfile demoProfile = new DeviceProfile();

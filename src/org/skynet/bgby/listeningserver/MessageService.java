@@ -41,13 +41,13 @@ public class MessageService extends MulticastListenerService {
 			return null;
 		}
 		if (handlers == null || handlers.isEmpty()){
-			DriverUtils.log(Level.SEVERE, TAG, "No any UDP message handlers registered");
+			DriverUtils.log(Level.WARNING, TAG, "No any UDP message handlers registered");
 			return null;
 		}
 		
 		UdpMessage message = codec.decode(udpData);
 		if (message == null){
-			DriverUtils.log(Level.SEVERE, TAG, "Invalid UDP data dropped");
+			DriverUtils.log(Level.WARNING, TAG, "Invalid UDP data dropped");
 			return null;
 		}
 		

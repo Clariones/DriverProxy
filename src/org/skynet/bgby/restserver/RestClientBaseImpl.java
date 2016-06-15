@@ -82,7 +82,6 @@ public abstract class RestClientBaseImpl implements IRestClient {
 	protected static final String TAG = RestClientBaseImpl.class.getName();
 	protected int connectionTimeout = DEFAULT_CONN_TIMEOUT;
 	protected String encoding = "UTF-8";
-	protected boolean keepAlive = true;
 	protected int readTimeout = DEFAULT_READ_TIMEOUT;
 	protected ExecutorService threadPool;
 
@@ -144,9 +143,6 @@ public abstract class RestClientBaseImpl implements IRestClient {
 		return threadPool;
 	}
 
-	public boolean isKeepAlive() {
-		return keepAlive;
-	}
 
 	protected String makeUrl(InetSocketAddress serverAddress, String contentRoot, IRestRequest request) {
 		StringBuilder sb = new StringBuilder();
@@ -246,10 +242,6 @@ public abstract class RestClientBaseImpl implements IRestClient {
 
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
-	}
-
-	public void setKeepAlive(boolean keepAlive) {
-		this.keepAlive = keepAlive;
 	}
 
 	public void setReadTimeout(int readTimeout) {

@@ -1,4 +1,4 @@
-package org.skynet.bgby.device;
+package org.skynet.bgby.deviceprofile;
 
 import java.util.Map;
 
