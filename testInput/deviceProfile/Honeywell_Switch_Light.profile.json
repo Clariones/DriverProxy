@@ -1,0 +1,9 @@
+{
+	ID: "Honeywell HDW 2000 HVAC",
+	standard: "Light.Simple",
+	identifiers: ["ipAddress","id"],
+	spec: {
+		canDoToggle: "yes",
+		canQueryStatus: "yes"
+	}
+}

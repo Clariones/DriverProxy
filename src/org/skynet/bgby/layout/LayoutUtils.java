@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 
 public class LayoutUtils {
 	public static final Gson gson;
@@ -56,7 +57,7 @@ public class LayoutUtils {
 	}
 
 	public static String toJson(List<ILayout> layouts) {
-		List<LayoutData> layoutDatas = new ArrayList();
+		List<LayoutData> layoutDatas = new ArrayList<>();
 		if (layouts == null || layouts.isEmpty()){
 			return "[]";
 		}

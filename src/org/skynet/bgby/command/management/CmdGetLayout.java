@@ -43,7 +43,8 @@ public class CmdGetLayout extends BaseManageCmd implements IRestCommandHandler {
 			result.setResult(RestResponseError.ERR_CONTROLLER_NOT_FOUND.toString());
 		} else {
 			String layoutJson = LayoutUtils.toJson(layout);
-			result.setData(layoutJson);
+//			result.setData(layoutJson);
+			result.setData(layout);
 		}
 		return result;
 	}

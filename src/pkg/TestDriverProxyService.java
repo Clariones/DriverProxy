@@ -29,13 +29,16 @@ public class TestDriverProxyService {
 		service.setConfig(config);
 		
 		// TODO
-		DeviceProfileManager profileManager = new DeviceProfileManagerPCImpl();
+		DeviceProfileManagerPCImpl profileManager = new DeviceProfileManagerPCImpl();
+		profileManager.setBaseFolder(new File("testInput/deviceProfile"));
 		service.setDeviceProfileManager(profileManager);		
 		// TODO
-		DeviceConfigManager configManager = new DeviceConfigManagerPCImpl();
+		DeviceConfigManagerPCImpl configManager = new DeviceConfigManagerPCImpl();
+		configManager.setBaseFolder(new File("testInput/deviceInfo"));
 		service.setDeviceConfigManager(configManager);
 		// TODO
-		LayoutManager layoutManager = new LayoutManagerPCImpl();
+		LayoutManagerPCImpl layoutManager = new LayoutManagerPCImpl();
+		layoutManager.setBaseFolder(new File("testInput/controllerLayout"));
 		service.setLayoutManager(layoutManager);
 		
 		TestReporter reporter = new TestReporter();

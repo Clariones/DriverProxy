@@ -1,11 +1,26 @@
 package org.skynet.bgby.deviceconfig;
 
-public class DeviceConfigManagerPCImpl implements DeviceConfigManager {
+import java.io.File;
 
-	@Override
-	public DeviceConfigData getDeviceConfigData(String devId) {
-		// TODO Auto-generated method stub
-		return null;
+public class DeviceConfigManagerPCImpl extends DeviceConfigManagerImpl {
+
+	public DeviceConfigManagerPCImpl(){
+		repository = new DeviceConfigFileRepository();
+	}
+
+	protected File baseFolder;
+
+	public File getBaseFolder() {
+		return baseFolder;
+	}
+
+	public void setBaseFolder(File baseFolder) {
+		this.baseFolder = baseFolder;
+		if (this.repository == null){
+			repository = new DeviceConfigFileRepository();
+		}
+		DeviceConfigFileRepository repo = (DeviceConfigFileRepository) repository;
+		repo.setBaseFolder(baseFolder);
 	}
 
 }

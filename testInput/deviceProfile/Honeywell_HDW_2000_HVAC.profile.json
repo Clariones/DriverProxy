@@ -1,0 +1,12 @@
+{
+	ID: "Honeywell HDW 2000 HVAC",
+	standard: "HVAC.Normal",
+	identifiers: ["ipAddress","id"],
+	spec: {
+		validRunningModes: ["关机","制冷","制热","自动"],
+		roomTemperatureRange: [16.0,35.0],
+		temperatureSettingRange:[16.0, 35.0],
+		validFanModes: ["高速","舒适","柔和"],
+		humidityFunction: "no"
+	}
+}

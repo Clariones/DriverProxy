@@ -16,7 +16,7 @@ import org.skynet.bgby.protocol.IRestRequest;
 public class DriverUtils {
 	public static final int DEFAULT_REST_PORT = 8981;
 
-	public static final String MIME_TYPE_JSON = "application/json";
+	public static final String MIME_TYPE_JSON = "application/json; charset=utf-8";
 	
 	private static ILogger logger;
 

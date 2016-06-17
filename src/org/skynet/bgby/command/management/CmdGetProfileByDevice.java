@@ -50,7 +50,8 @@ public class CmdGetProfileByDevice extends BaseManageCmd implements IRestCommand
 		result.setDevices(deviceProfileNames);
 		result.setProfiles(profiles);
 		RestResponseImpl response = new RestResponseImpl();
-		response.setData(LayoutUtils.gson.toJson(result));
+//		response.setData(LayoutUtils.gson.toJson(result));
+		response.setData(result);
 		return response;
 	}
 
