@@ -1,5 +1,5 @@
 {
-	ID: "Honeywell HDW 2000 HVAC",
+	ID: "Honeywell Switch Light",
 	standard: "Light.Simple",
 	identifiers: ["ipAddress","id"],
 	spec: {

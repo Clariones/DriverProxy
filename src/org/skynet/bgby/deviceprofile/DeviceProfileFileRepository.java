@@ -10,8 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class DeviceProfileFileRepository extends SimpleFileRepository<DeviceProfile> implements DeviceProfileRepository {
-	protected Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	
 	@Override
 	public DeviceProfile getDeviceProfile(String profileID) {
 		return getDataByID(profileID);

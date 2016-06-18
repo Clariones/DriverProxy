@@ -1,0 +1,25 @@
+{
+	ID: "Honeywell HDW 2000",
+	driverClass: "org.skynet.bgby.devicedriver.honeywell.Hdw2000",
+	configurationClass: "org.skynet.bgby.devicedriver.honeywell.Hdw2000Config",
+	configurationData: {
+		supportedProfiles: [
+			"Honeywell HDW 2000 HVAC", 
+			"Honeywell Switch Light"
+		],
+		authConfig : {
+			"192.168.0.40" : {
+				"username":"admin",
+				"password":"123456",
+				"hostIPAddress":"192.168.0.40",
+				"port":10099
+			},
+			"192.168.0.41" : {
+				"username":"admin",
+				"password":"123456",
+				"hostIPAddress":"192.168.0.41",
+				"port":10100
+			}
+		}
+	}
+}

@@ -12,8 +12,6 @@ import com.google.gson.GsonBuilder;
 
 public class DeviceConfigFileRepository extends SimpleFileRepository<DeviceConfigData>
 		implements DeviceConfigRepository {
-	protected Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
 	@Override
 	protected DeviceConfigData loadFromFile(FileInputStream fIns) {
 		return gson.fromJson(new InputStreamReader(fIns), DeviceConfigData.class);

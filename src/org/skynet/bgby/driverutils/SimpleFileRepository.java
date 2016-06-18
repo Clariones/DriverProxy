@@ -8,11 +8,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public abstract class SimpleFileRepository<T> {
 	protected static final String TAG = SimpleFileRepository.class.getName();
 	protected File baseFolder;
 	protected Map<String, T> cache;
 	protected boolean isDevelopingMode = false;
+	protected Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	protected void cacheData(String key, T result) {
 		if (cache == null){

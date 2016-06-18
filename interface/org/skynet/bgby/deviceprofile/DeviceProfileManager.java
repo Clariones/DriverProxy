@@ -1,7 +1,10 @@
 package org.skynet.bgby.deviceprofile;
 
-public interface DeviceProfileManager {
+import org.skynet.bgby.driverproxy.DPManagedModule;
+
+public interface DeviceProfileManager extends DPManagedModule{
 
 	DeviceProfile getProfile(String profileID);
+
 
 }
