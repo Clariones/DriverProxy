@@ -66,4 +66,29 @@ public class DriverUtils {
 		return uri+"?"+params;
 	}
 
+	public static int getAsInt(Object obj, int defValue){
+		if (obj instanceof String){
+			return Double.valueOf((String) obj).intValue();
+		}else if (obj instanceof Number){
+			return ((Number) obj).intValue();
+		}else{
+			return defValue;
+		}
+	}
+
+	public static boolean getAsBoolean(Object obj, boolean defVal) {
+		if (obj instanceof Boolean){
+			return ((Boolean) obj).booleanValue();
+		}else if (obj instanceof Number){
+			return !obj.equals(0);
+		}else if (obj instanceof String){
+			String val = ((String) obj).toLowerCase();
+			if (val.equals("yes") || val.equals("true") || val.equals("on")){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		return defVal;
+	}
 }

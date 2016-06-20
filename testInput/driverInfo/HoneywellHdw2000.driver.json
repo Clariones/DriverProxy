@@ -1,12 +1,8 @@
 {
 	ID: "Honeywell HDW 2000",
-	driverClass: "org.skynet.bgby.devicedriver.honeywell.Hdw2000",
-	configurationClass: "org.skynet.bgby.devicedriver.honeywell.Hdw2000Config",
+	driverClass: "org.skynet.bgby.devicedriver.honeywell.Hgw2000",
+	configurationClass: "org.skynet.bgby.devicedriver.honeywell.Hgw2000DriverConfig",
 	configurationData: {
-		supportedProfiles: [
-			"Honeywell HDW 2000 HVAC", 
-			"Honeywell Switch Light"
-		],
 		authConfig : {
 			"192.168.0.40" : {
 				"username":"admin",
@@ -20,6 +16,20 @@
 				"hostIPAddress":"192.168.0.41",
 				"port":10100
 			}
+		},
+		runningModes : {
+			"关机":0,
+			"制冷":1003,
+			"制热":1002,
+			"自动":1000,
+			"风":  1001,
+			"除湿":1004
+		},
+		fanModes : {
+			"自动": 0,
+			"高速": 3,
+			"舒适": 2,
+			"柔和": 1
 		}
 	}
 }

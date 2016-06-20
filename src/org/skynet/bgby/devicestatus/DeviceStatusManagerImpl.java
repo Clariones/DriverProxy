@@ -35,4 +35,16 @@ public class DeviceStatusManagerImpl implements DeviceStatusManager {
 		return null;
 	}
 
+	@Override
+	public DeviceStatus getDevice(String devId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateDevice(DeviceStatus deviceStatus) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

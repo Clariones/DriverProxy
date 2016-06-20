@@ -9,6 +9,15 @@ public class DeviceStatus {
 	protected String ID;
 	protected String profile;
 	protected Map<String, Object> status;
+	protected Map<String, Object> identify;
+
+	public Map<String, Object> getIdentify() {
+		return identify;
+	}
+
+	public void setIdentify(Map<String, Object> identify) {
+		this.identify = identify;
+	}
 
 	public String getID() {
 		return ID;

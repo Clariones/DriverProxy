@@ -5,7 +5,7 @@ import java.util.Map;
 public class DeviceConfigData {
 	protected String ID;
 	protected String profile;
-	protected Map<String, String> identity;
+	protected Map<String, Object> identity;
 	public String getID() {
 		return ID;
 	}
@@ -18,10 +18,10 @@ public class DeviceConfigData {
 	public void setProfile(String profile) {
 		this.profile = profile;
 	}
-	public Map<String, String> getIdentity() {
+	public Map<String, Object> getIdentity() {
 		return identity;
 	}
-	public void setIdentity(Map<String, String> identity) {
+	public void setIdentity(Map<String, Object> identity) {
 		this.identity = identity;
 	}
 }

@@ -2,7 +2,7 @@
 	ID: "AC-2",
 	profile: "Honeywell HDW 2000 HVAC",
 	identity: {
-		"ipAddress":"192.168.100.1",
-		"id" : "102"
+		"ipAddress":"192.168.0.41",
+		"id" : 102
 	}
 }

@@ -2,7 +2,7 @@
 	ID: "Light-1",
 	profile: "Honeywell Switch Light",
 	identity: {
-		"ipAddress":"192.168.100.1",
-		"id" : "201"
+		"ipAddress":"192.168.0.40",
+		"id" : 201
 	}
 }

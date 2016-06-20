@@ -69,14 +69,24 @@ public abstract class DriverManagerImpl implements DriverManager {
 		loadDriverRegisterInfos();
 		createDrivers();
 		initDriverStatus();
+		startDrivers();
+	}
 
+	private void startDrivers() {
+		Iterator<DeviceDriver> it = driverList.iterator();
+		while(it.hasNext()){
+			it.next().onStart();
+		}
 	}
 
 	protected void initDriverStatus() throws DPModuleException {
 		List<DeviceStatus> deviceStatus = deviceStatusManager.listAllDevices();
+		if (deviceStatus == null || deviceStatus.isEmpty()){
+			return;
+		}
 		for (DeviceStatus device : deviceStatus) {
 			DeviceConfigData config = getDeviceConfigManager().getDeviceConfigData(device.getID());
-			DeviceDriver driver = lookupDriverForDevice(device.getID(), device.getProfile(), config);
+			DeviceDriver driver = lookupDriverForDevice(device.getID(), device.getProfile(), config.getIdentity());
 			if (driver == null){
 				String msg = String.format("Cannot found any driver for device %s(%s,%s)",
 						device.getID(), device.getProfile(), config.getIdentity());
@@ -88,7 +98,7 @@ public abstract class DriverManagerImpl implements DriverManager {
 	}
 
 	@Override
-	public DeviceDriver lookupDriverForDevice(String deviceID, String profile, DeviceConfigData config)
+	public DeviceDriver lookupDriverForDevice(String deviceID, String profile, Map<String, Object> identify)
 			throws DPModuleException {
 		if (driverMap != null && driverMap.containsKey(deviceID)) {
 			return driverMap.get(deviceID);
@@ -97,7 +107,7 @@ public abstract class DriverManagerImpl implements DriverManager {
 		Iterator<DeviceDriver> it = driverList.iterator();
 		while(it.hasNext()){
 			DeviceDriver driver = it.next();
-			if (!driver.canDriverDevice(deviceID, profile, config.getIdentity())){
+			if (driver.canDriverDevice(deviceID, profile, identify)){
 				putIntoDriverMap(deviceID, driver);
 				return driver;
 			}

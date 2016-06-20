@@ -8,4 +8,8 @@ public interface DeviceStatusManager extends DPManagedModule {
 
 	List<DeviceStatus> listAllDevices();
 
+	DeviceStatus getDevice(String devId);
+
+	void updateDevice(DeviceStatus deviceStatus);
+
 }
