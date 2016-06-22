@@ -1,5 +1,6 @@
 package org.skynet.bgby.devicestatus;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.skynet.bgby.driverproxy.DPModuleException;
@@ -7,10 +8,8 @@ import org.skynet.bgby.driverproxy.DPModuleStatusReporter;
 
 public class DeviceStatusManagerImpl implements DeviceStatusManager {
 	protected DPModuleStatusReporter startingReporter;
+	protected DeviceStatusRepository repository;
 
-	public DeviceStatusManagerImpl() {
-		// TODO Auto-generated constructor stub
-	}
 
 	@Override
 	public void start() throws DPModuleException {
@@ -37,14 +36,12 @@ public class DeviceStatusManagerImpl implements DeviceStatusManager {
 
 	@Override
 	public DeviceStatus getDevice(String devId) {
-		// TODO Auto-generated method stub
-		return null;
+		return repository.getDeviceStatus(devId);
 	}
 
 	@Override
-	public void updateDevice(DeviceStatus deviceStatus) {
-		// TODO Auto-generated method stub
-		
+	public void updateDevice(DeviceStatus deviceStatus) throws IOException {
+		repository.updateDeviceStatus(deviceStatus);
 	}
 
 }

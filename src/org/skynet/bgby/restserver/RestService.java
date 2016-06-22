@@ -58,7 +58,7 @@ public class RestService extends NanoHTTPD {
 			return responseInvalidRestRequest(session);
 		}
 		IHttpResponse response = new HttpResponseImpl();
-
+		
 		Iterator<IRestRequestHandler> it = restCommandHandlers.iterator();
 		boolean handled = false;
 		while (it.hasNext()) {

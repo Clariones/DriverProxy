@@ -272,7 +272,7 @@ public class HGW2000Controller {
 			int dimmer) throws IOException {
 
 		String requestCommand = this.construstRequest("cfg", "lig", lightId,
-				lightId, onOrOff, dimmer, 0);
+				action, onOrOff, dimmer, 0);
 		// String commands[]=response.split(",");
 		// int length=commands.length;
 		return getResult(requestCommand);

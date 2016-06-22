@@ -18,6 +18,8 @@ import org.skynet.bgby.deviceprofile.DeviceProfile;
 import org.skynet.bgby.deviceprofile.DeviceProfileManager;
 import org.skynet.bgby.devicestandard.DeviceStandard;
 import org.skynet.bgby.devicestandard.NormalHVAC;
+import org.skynet.bgby.devicestandard.SimpleDimmer;
+import org.skynet.bgby.devicestandard.SimpleLight;
 import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.devicestatus.DeviceStatusManager;
 import org.skynet.bgby.driverutils.DriverUtils;
@@ -41,6 +43,8 @@ public class DriverProxyService {
 
 	static {
 		deviceStandards.put(NormalHVAC.ID, new NormalHVAC());
+		deviceStandards.put(SimpleLight.ID, new SimpleLight());
+		deviceStandards.put(SimpleDimmer.ID, new SimpleDimmer());
 	}
 
 	class DeviceDriverCommandHandler implements IRestRequestHandler {
@@ -112,7 +116,8 @@ public class DriverProxyService {
 		if (standard == null) {
 			return false;
 		}
-		return standard.isSupportCommand(command);
+//		return standard.isSupportCommand(command);
+		return true;
 	}
 
 	public DriverProxyConfiguration getConfig() {
@@ -162,6 +167,9 @@ public class DriverProxyService {
 				deviceStatus.setIdentify(devCfg.getIdentity());
 			}
 			IRestResponse response = driver.onCommand(command, deviceStatus, restRequest.getParams());
+			if (response.getRequest() == null){
+				response.setRequest(DriverUtils.getRequestFullUri(restRequest));
+			}
 			getDeviceStatusManager().updateDevice(deviceStatus);
 			restResponse.setAsString(gson.toJson(response));
 			restResponse.setMimeType(DriverUtils.MIME_TYPE_JSON);
@@ -175,7 +183,7 @@ public class DriverProxyService {
 			restResponse.setAsString(msg);
 			restResponse.setMimeType(NanoHTTPD.MIME_PLAINTEXT);
 			return;
-		} catch (DeviceDriverException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			String msg = DriverUtils.dumpExceptionToString(e);
 			DriverUtils.log(Level.SEVERE, TAG, msg);

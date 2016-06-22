@@ -1,8 +1,9 @@
 {
 	ID: "Light-1",
-	profile: "Honeywell Switch Light",
+	profile: "Honeywell HBus Light",
 	identity: {
 		"ipAddress":"192.168.0.40",
-		"id" : 201
+		"area": 1,
+		"id" : 1
 	}
 }

@@ -114,6 +114,16 @@ public abstract class SimpleFileRepository<T> {
 			} else {
 				DriverUtils.log(Level.FINE, TAG, "Remove old data {0}", tgtFile.getAbsolutePath());
 			}
+		}else{
+			File pFile = tgtFile.getParentFile();
+			DriverUtils.log(Level.INFO, TAG, "Check folder existed or not: " + pFile.getAbsolutePath());
+			boolean done;
+			if (!pFile.exists()){
+				done = pFile.mkdirs();
+				DriverUtils.log(Level.INFO, TAG, "Create folder " + pFile.getAbsolutePath() + ": " + done);
+			}
+			done = tgtFile.createNewFile();
+			DriverUtils.log(Level.INFO, TAG, "Create file " + tgtFile.getAbsolutePath() + ": " + done);
 		}
 
 		FileWriter fw = new FileWriter(tgtFile);

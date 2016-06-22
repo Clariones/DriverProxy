@@ -1,0 +1,9 @@
+{
+	ID: "Honeywell HBus Light",
+	standard: "Light.Dimmer",
+	identifiers: ["ipAddress","id", "area"],
+	spec: {
+		canDoToggle: "yes",
+		canQueryStatus: "yes"
+	}
+}

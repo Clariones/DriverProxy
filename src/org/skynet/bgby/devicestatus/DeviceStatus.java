@@ -1,5 +1,6 @@
 package org.skynet.bgby.devicestatus;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -88,6 +89,13 @@ public class DeviceStatus {
 			}
 		}
 		return true;
+	}
+
+	public void setStatus(String key, Object value) {
+		if (status == null){
+			status = new HashMap<>();
+		}
+		status.put(key, value);
 	}
 
 }

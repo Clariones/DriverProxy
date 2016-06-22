@@ -17,6 +17,7 @@ public abstract class DeviceStandardBaseImpl implements DeviceStandard {
 	public static final int ERR_IO_EXCEPTION = ERR_DEVICE_COMMON_START_CODE + 2;
 	public static final int ERR_WRONG_PROFILE = ERR_DEVICE_COMMON_START_CODE + 3;
 	public static final int ERR_MISS_PROFILE = ERR_DEVICE_COMMON_START_CODE + 4;
+	public static final int ERR_WRONG_STATUS = ERR_DEVICE_COMMON_START_CODE + 5;
 	
 	protected Set<String> terms;
 	protected Set<String> commands;

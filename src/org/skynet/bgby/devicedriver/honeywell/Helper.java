@@ -7,185 +7,86 @@ import java.util.Set;
 
 import org.skynet.bgby.devicedriver.honeywell.Hgw2000.HgwCmdHandler;
 import org.skynet.bgby.devicedriver.honeywell.Hgw2000.Profile;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.ControlAirCondition;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.ControlHbusLight;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.ControlLight;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.HGWDriverWrapper;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.QueryAirCondition;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.QueryHbusLight;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.QueryLight;
 import org.skynet.bgby.devicestandard.DeviceStandardBaseImpl;
 import org.skynet.bgby.devicestandard.NormalHVAC;
+import org.skynet.bgby.devicestandard.SimpleDimmer;
 import org.skynet.bgby.devicestandard.SimpleLight;
 import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.driverutils.DriverUtils;
 import org.skynet.bgby.protocol.IRestResponse;
 
 public class Helper {
+	private static class CmdProfileHandler {
+		public CmdProfileHandler(String command2, HGWDriverWrapper wrapper2) {
+			command = command2;
+			wrapper = wrapper2;
+		}
+		String command;
+		HGWDriverWrapper wrapper;
+	}
 
-	protected static final Map<String, HgwCmdHandler> cmdHandlers = new HashMap<>();
+	private static final Map<String, HgwCmdHandler> cmdHandlers = new HashMap<>();
 	public static final Set<String> SUPPORTED_PROFILES = new HashSet<>();
+	public static final Map<String, Map<String, HGWDriverWrapper>> HANDLERS_BY_PRODILE = new HashMap<>();
+
+	private static void as_profile(Profile profile, CmdProfileHandler... handlers) {
+		SUPPORTED_PROFILES.add(profile.name);
+		if (handlers == null || handlers.length == 0){
+			return;
+		}
+		Map<String, HGWDriverWrapper> proHandlers = HANDLERS_BY_PRODILE.get(profile.name);
+		if (proHandlers == null){
+			proHandlers = new HashMap<>();
+			HANDLERS_BY_PRODILE.put(profile.name, proHandlers);
+		}
+		for(CmdProfileHandler handler: handlers){
+			proHandlers.put(handler.command, handler.wrapper);
+		}
+	}
+
+	static CmdProfileHandler handle(String command, HGWDriverWrapper wrapper) {
+		return new CmdProfileHandler(command, wrapper);
+	}
 
 	static {
-		SUPPORTED_PROFILES.add(Profile.DIMMER.name);
-		SUPPORTED_PROFILES.add(Profile.FLOOR_HEATING.name);
-		SUPPORTED_PROFILES.add(Profile.HVAC.name);
-		SUPPORTED_PROFILES.add(Profile.SIMPLE_LIGHT.name);
-
-		cmdHandlers.put(NormalHVAC.CMD_SET_TEMPERATURE, new HgwCmdHandler() {
-			public IRestResponse handleCmd(Hgw2000 standardDriver, HGW2000Controller driver, DeviceStatus status,
-					Map<String, String> params) {
-				return standardDriver.handleCmdSetTemperature(driver, status, params);
-			}
-		});
-		cmdHandlers.put(NormalHVAC.CMD_SET_RUNNING_MODE, new HgwCmdHandler() {
-			public IRestResponse handleCmd(Hgw2000 standardDriver, HGW2000Controller driver, DeviceStatus status,
-					Map<String, String> params) {
-				return standardDriver.handleCmdSetRunningMode(driver, status, params);
-			}
-		});
-		cmdHandlers.put(NormalHVAC.CMD_SET_FAN_MODE, new HgwCmdHandler() {
-			public IRestResponse handleCmd(Hgw2000 standardDriver, HGW2000Controller driver, DeviceStatus status,
-					Map<String, String> params) {
-				return standardDriver.handleCmdSetFanMode(driver, status, params);
-			}
-		});
-		cmdHandlers.put(SimpleLight.CMD_SET_LIGHT, new HgwCmdHandler() {
-			public IRestResponse handleCmd(Hgw2000 standardDriver, HGW2000Controller driver, DeviceStatus status,
-					Map<String, String> params) {
-				return standardDriver.handleCmdSetLight(driver, status, params);
-			}
-		});
-		cmdHandlers.put(SimpleLight.CMD_GET_LIGHT, new HgwCmdHandler() {
-			public IRestResponse handleCmd(Hgw2000 standardDriver, HGW2000Controller driver, DeviceStatus status,
-					Map<String, String> params) {
-				return standardDriver.handleCmdGetLight(driver, status, params);
-			}
-		});
-		cmdHandlers.put(DeviceStandardBaseImpl.CMD_SET_ALL, new HgwCmdHandler() {
-			public IRestResponse handleCmd(Hgw2000 standardDriver, HGW2000Controller driver, DeviceStatus status,
-					Map<String, String> params) {
-				Profile p = Profile.byName(status.getProfile());
-				if (p == null) {
-					return standardDriver.newErrorResult(SimpleLight.ERR_WRONG_PROFILE,
-							"Required device profile " + status.getProfile() + " not declared", status.getProfile());
-				}
-
-				switch (p) {
-				case SIMPLE_LIGHT:
-					return standardDriver.handleCmdLightSetAll(driver, status, params);
-				case HVAC:
-					return standardDriver.handleCmdHvacSetAll(driver, status, params);
-				case FLOOR_HEATING:
-					return standardDriver.handleCmdFloorHeatingSetAll(driver, status, params);
-				case DIMMER:
-					return standardDriver.handleCmdDimmerSetAll(driver, status, params);
-				default:
-					return standardDriver.newErrorResult(SimpleLight.ERR_MISS_PROFILE,
-							"Required device profile " + status.getProfile() + " not handled yet", status.getProfile());
-				}
-			}
-		});
-		cmdHandlers.put(DeviceStandardBaseImpl.CMD_GET_ALL, new HgwCmdHandler() {
-			public IRestResponse handleCmd(Hgw2000 standardDriver, HGW2000Controller driver, DeviceStatus status,
-					Map<String, String> params) {
-				Profile p = Profile.byName(status.getProfile());
-				if (p == null) {
-					return standardDriver.newErrorResult(SimpleLight.ERR_WRONG_PROFILE,
-							"Required device profile " + status.getProfile() + " not declared", status.getProfile());
-				}
-
-				switch (p) {
-				case SIMPLE_LIGHT:
-					return standardDriver.handleCmdLightGetAll(driver, status, params);
-				case HVAC:
-					return standardDriver.handleCmdHvacGetAll(driver, status, params);
-				case FLOOR_HEATING:
-					return standardDriver.handleCmdFloorHeatingGetAll(driver, status, params);
-				case DIMMER:
-					return standardDriver.handleCmdDimmerGetAll(driver, status, params);
-				default:
-					return standardDriver.newErrorResult(SimpleLight.ERR_MISS_PROFILE,
-							"Required device profile " + status.getProfile() + " not handled yet", status.getProfile());
-				}
-			}
-		});
+		as_profile(Profile.HBUS_LIGHT,
+				handle(SimpleDimmer.CMD_SET_ALL, new ControlHbusLight()),
+				handle(SimpleDimmer.CMD_GET_ALL, new QueryHbusLight()),
+				handle(SimpleDimmer.CMD_SET_LIGHT, new ControlHbusLight()),
+				handle(SimpleDimmer.CMD_GET_LIGHT, new QueryHbusLight()));
+		as_profile(Profile.SIMPLE_LIGHT,
+				handle(SimpleDimmer.CMD_SET_ALL, new ControlLight()),
+				handle(SimpleDimmer.CMD_GET_ALL, new QueryLight()),
+				handle(SimpleDimmer.CMD_SET_LIGHT, new ControlLight()),
+				handle(SimpleDimmer.CMD_GET_LIGHT, new QueryLight()));
+		as_profile(Profile.HVAC,
+				handle(NormalHVAC.CMD_GET_FAM_MODE, new QueryAirCondition()),
+				handle(NormalHVAC.CMD_GET_RUNNING_MODE, new QueryAirCondition()),
+				handle(NormalHVAC.CMD_GET_TEMPERATURE_SETTING, new QueryAirCondition()),
+				handle(NormalHVAC.CMD_GET_ROOM_TEMPERATURE, new QueryAirCondition()),
+				handle(NormalHVAC.CMD_GET_ALL, new QueryAirCondition()),
+				handle(NormalHVAC.CMD_SET_ALL, new ControlAirCondition()),
+				handle(NormalHVAC.CMD_SET_FAN_MODE, new ControlAirCondition()),
+				handle(NormalHVAC.CMD_SET_RUNNING_MODE, new ControlAirCondition()),
+				handle(NormalHVAC.CMD_SET_TEMPERATURE, new ControlAirCondition()));
 	}
 
 	private Helper() {
 	}
 
-	public static AirConditionArgs getAirConditionArgs(Hgw2000DriverConfig config, DeviceStatus status) {
-		AirConditionArgs arg = new AirConditionArgs();
-		arg.config = config;
-		arg.id = DriverUtils.getAsInt(status.getIdentify().get(Hgw2000.IDENTIFIER_ID), -1);
-		assert(arg.id != -1);
-		if (status.getStatus() == null) {
-			arg.onOrOff = 0;
-			return arg;
-		}
-		Object statusValue = status.getStatus().get(NormalHVAC.TERM_RUNNING_MODE);
-		if (statusValue instanceof String) {
-			Integer modeNum = config.getRunningModes().get(statusValue);
-			if (modeNum != null) {
-				arg.onOrOff = modeNum < 1000 ? 0 : 1;
-				arg.mode = modeNum % 1000;
-			} else {
-				throw new RuntimeException("HGW 2000 running modes misconfigured: " + statusValue);
-			}
-		}
-		statusValue = status.getStatus().get(NormalHVAC.TERM_FAN_MODE);
-		if (statusValue instanceof String) {
-			Integer modeNum = config.getFanModes().get(statusValue);
-			if (modeNum != null) {
-				arg.fan = modeNum;
-			} else {
-				throw new RuntimeException("HGW 2000 fan modes misconfigured: " + statusValue);
-			}
-		}
-		statusValue = status.getStatus().get(NormalHVAC.TERM_SET_TEMPERATURE);
-		arg.tempToSet = DriverUtils.getAsInt(statusValue, 0);
-		return arg;
-	}
 
-	static class AirConditionArgs {
-		Hgw2000DriverConfig config;
-		int fan = 0;
-		int id;
-		int mode = 0;
-		int onOrOff = 1;
-		int tempToSet;
-		int windDirection = 0;
-
-		public IRestResponse updateByRequiredParams(Map<String, String> params) {
-			Object statusValue = params.get(NormalHVAC.TERM_FAN_MODE);
-			if (statusValue instanceof String) {
-				Integer modeNum = config.getFanModes().get(statusValue);
-				if (modeNum != null) {
-					fan = modeNum;
-				} else {
-					return Hgw2000.newErrorResult(NormalHVAC.ERR_INVALID_FAN_MODE, "Invalid fan mode",
-							(String) statusValue);
-				}
-			}
-			
-			statusValue = params.get(NormalHVAC.TERM_RUNNING_MODE);
-			if (statusValue instanceof String) {
-				Integer modeNum = config.getRunningModes().get(statusValue);
-				if (modeNum != null) {
-					onOrOff = modeNum < 1000 ? 0 : 1;
-					mode = modeNum % 1000;
-				} else {
-					return Hgw2000.newErrorResult(NormalHVAC.ERR_INVALID_RUNNING_MODE, "Invalid running mode",
-							(String) statusValue);
-				}
-			}
-			
-			statusValue = params.get(NormalHVAC.TERM_SET_TEMPERATURE);
-			if (statusValue instanceof String) {
-				int newTemp = DriverUtils.getAsInt(statusValue, -1);
-				if (newTemp <= 0){
-					return Hgw2000.newErrorResult(NormalHVAC.ERR_SET_TEMP_OUT_OF_RANGE, "Invalid temperature setting",
-							(String) statusValue);
-				}else{
-					tempToSet = newTemp;
-				}
-			}
+	public static HGWDriverWrapper getCommandWrapper(String profile, String command) {
+		Map<String, HGWDriverWrapper> handlers = HANDLERS_BY_PRODILE.get(profile);
+		if (handlers == null){
 			return null;
 		}
+		return handlers.get(command);
 	}
-
 }

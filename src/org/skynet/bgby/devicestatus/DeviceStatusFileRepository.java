@@ -26,6 +26,16 @@ public class DeviceStatusFileRepository extends SimpleFileRepository<DeviceStatu
 	protected DeviceStatus loadFromFile(FileInputStream fIns) {
 		return gson.fromJson(new InputStreamReader(fIns), DeviceStatus.class);
 	}
+
+	@Override
+	public DeviceStatus getDeviceStatus(String devId) {
+		return getDataByID(devId);
+	}
+
+	@Override
+	public void updateDeviceStatus(DeviceStatus data) throws IOException {
+		this.setData(data.getID(), data);
+	}
 	
 	
 

@@ -1,35 +1,28 @@
 package org.skynet.bgby.devicedriver.honeywell;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 import org.skynet.bgby.devicedriver.DeviceDriverBaseImpl;
 import org.skynet.bgby.devicedriver.DeviceDriverException;
-import org.skynet.bgby.devicedriver.honeywell.Helper.AirConditionArgs;
-import org.skynet.bgby.devicestandard.DeviceStandardBaseImpl;
-import org.skynet.bgby.devicestandard.NormalHVAC;
-import org.skynet.bgby.devicestandard.SimpleLight;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.HGWDriverWrapper;
 import org.skynet.bgby.devicestatus.DeviceStatus;
-import org.skynet.bgby.driverutils.DriverUtils;
 import org.skynet.bgby.protocol.IRestResponse;
 import org.skynet.bgby.protocol.RestResponseImpl;
 
 public class Hgw2000 extends DeviceDriverBaseImpl {
+
 	interface HgwCmdHandler {
 		IRestResponse handleCmd(Hgw2000 standardDriver, HGW2000Controller driver, DeviceStatus status,
 				Map<String, String> params);
 	}
 
 	enum Profile {
-		DIMMER("Honeywell HDW 2000 Dimmer"), FLOOR_HEATING("Honeywell HDW 2000 Floor Heating"), HVAC(
-				"Honeywell HDW 2000 HVAC"), SIMPLE_LIGHT("Honeywell Switch Light");
+		DIMMER("Honeywell HDW 2000 Dimmer"), FLOOR_HEATING("Honeywell HDW 2000 Floor Heating"), HBUS_CURTAIN(
+				"Honeywell Curtain"), HBUS_HBUS_CURTAIN("Honeywell HBus Curtain"), HBUS_LIGHT("Honeywell HBus Light"), HVAC(
+								"Honeywell HDW 2000 HVAC"), SIMPLE_LIGHT(
+								"Honeywell Switch Light");
 
 		public static Profile byName(String name) {
 			for (Profile p : values()) {
@@ -46,11 +39,35 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 			name = pName;
 		}
 	}
-
+	public static final int ERR_HGW2000_START_CODE = 20000;
+	public static final int ERR_BUS_FAILURE = ERR_HGW2000_START_CODE + 1;
+	public static final int ERR_CMD_PARSING = ERR_HGW2000_START_CODE + 2;
+	public static final int ERR_CMD_TIME_OUT = ERR_HGW2000_START_CODE + 3;
+	public static final int ERR_DEVICE_ACCESS_FAIL = ERR_HGW2000_START_CODE + 4;
+	public static final int ERR_DEVICE_FAILURE = ERR_HGW2000_START_CODE + 5;
+	public static final int ERR_DEVICE_OFFLINE = ERR_HGW2000_START_CODE + 6;
+	public static final int ERR_DEVICE_STATUES_UNKNOWN = ERR_HGW2000_START_CODE + 7;
+	public static final int ERR_NEED_AUTHENTICATION = ERR_HGW2000_START_CODE + 8;
+	public static final int ERR_SEND_COMMAND_FAIL = ERR_HGW2000_START_CODE + 9;
+	public static final int ERR_UNRECOGNIZED_RESPONSE = ERR_HGW2000_START_CODE + 10;
+	public static final int ERR_USER_AUTHENTICATION_FAIL = ERR_HGW2000_START_CODE + 11;
+	public static final int ERR_WRONG_CMD_FOR_DEVICE_TYPE = ERR_HGW2000_START_CODE + 12;
+	public static final int ERR_WRONG_DATA_FORMAT = ERR_HGW2000_START_CODE + 13;
+	public static final int ERR_WRONG_DEVICE_RETURN_VALUE = ERR_HGW2000_START_CODE + 14;
+	public static final int ERR_WRONG_RESPONSE_ERROR = ERR_HGW2000_START_CODE + 15;
+	
+	public static final String IDENTIFIER_AREA = "area";
 	public static final String IDENTIFIER_ID = "id";
 	public static final String IDENTIFIER_IPADDRESS = "ipAddress";
+	public static final String TAG = Hgw2000.class.getName();
 
-	private static final String TAG = Hgw2000.class.getName();
+	public static IRestResponse newErrorResult(int errCode, String title, Object detail) {
+		RestResponseImpl response = new RestResponseImpl();
+		response.setData(detail);
+		response.setErrorCode(errCode);
+		response.setResult(title);
+		return response;
+	}
 
 	protected Hgw2000DriverConfig config;
 
@@ -59,16 +76,6 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 	@Override
 	public boolean canDriverDevice(String deviceID, String profile, Map<String, Object> identity) {
 		return Helper.SUPPORTED_PROFILES.contains(profile);
-	}
-
-	protected IRestResponse handleCmdSetFanMode(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		return handleCmdHvacSetAll(driver, status, params);
-	}
-
-	protected IRestResponse handleCmdSetRunningMode(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		return handleCmdHvacSetAll(driver, status, params);
 	}
 
 	public Hgw2000DriverConfig getConfig() {
@@ -97,131 +104,10 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 		return driver;
 	}
 
-	protected IRestResponse handleCmdDimmerGetAll(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	protected IRestResponse handleCmdDimmerSetAll(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	protected IRestResponse handleCmdFloorHeatingGetAll(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	protected IRestResponse handleCmdFloorHeatingSetAll(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	protected IRestResponse handleCmdGetLight(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	protected IRestResponse handleCmdHvacGetAll(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	protected IRestResponse handleCmdHvacSetAll(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		AirConditionArgs args = Helper.getAirConditionArgs(config, status);
-		IRestResponse errResponse = args.updateByRequiredParams(params);
-		if (errResponse != null) {
-			return errResponse;
-		}
-
-		try {
-			ExecutionResult result = driver.controlAirCondition(args.id, args.onOrOff, args.mode, args.fan,
-					args.windDirection, args.tempToSet);
-			return newExecutionResult(result);
-		} catch (SocketTimeoutException e) {
-			e.printStackTrace();
-			String msg = DriverUtils.dumpExceptionToString(e);
-			DriverUtils.log(Level.SEVERE, TAG, msg);
-			return newErrorResult(NormalHVAC.ERR_CONNECT_TO_GATEWAY,
-					"Cannot connect to Honeywell Gateway of " + driver.viewCurrentConfiguration().getHostIPAddress(),
-					msg);
-		} catch (IOException e) {
-			e.printStackTrace();
-			String msg = DriverUtils.dumpExceptionToString(e);
-			DriverUtils.log(Level.SEVERE, TAG, msg);
-			return newErrorResult(NormalHVAC.ERR_IO_EXCEPTION, "Internal exception", msg);
-		}
-	}
-
-	protected IRestResponse handleCmdLightGetAll(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	protected IRestResponse handleCmdLightSetAll(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		String strOnOff = params.get(SimpleLight.TERM_LIGHT_STATUES);
-		if (strOnOff == null){
-			return newErrorResult(SimpleLight.ERR_MISS_LIGHT_STATUES, "Missing light state", "Must provide state parameter");
-		}
-		boolean bOnOff = DriverUtils.getAsBoolean(strOnOff, false);
-		int lightId = DriverUtils.getAsInt(status.getIdentify().get(IDENTIFIER_ID), 0);
-		assert(lightId > 0);
-		int dimmer = 255;
-		try {
-			ExecutionResult result = driver.controlLight(lightId, 4, bOnOff?1:0, dimmer);
-			return newExecutionResult(result);
-		} catch (SocketTimeoutException e) {
-			e.printStackTrace();
-			String msg = DriverUtils.dumpExceptionToString(e);
-			DriverUtils.log(Level.SEVERE, TAG, msg);
-			return newErrorResult(NormalHVAC.ERR_CONNECT_TO_GATEWAY,
-					"Cannot connect to Honeywell Gateway of " + driver.viewCurrentConfiguration().getHostIPAddress(),
-					msg);
-		} catch (IOException e) {
-			e.printStackTrace();
-			String msg = DriverUtils.dumpExceptionToString(e);
-			DriverUtils.log(Level.SEVERE, TAG, msg);
-			return newErrorResult(NormalHVAC.ERR_IO_EXCEPTION, "Internal exception", msg);
-		}
-	}
-
-	protected IRestResponse handleCmdSetLight(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		return handleCmdLightSetAll(driver, status, params);
-	}
-
-	protected IRestResponse handleCmdSetTemperature(HGW2000Controller driver, DeviceStatus status,
-			Map<String, String> params) {
-		return handleCmdHvacSetAll(driver, status, params);
-	}
-
 	@Override
 	public void initStatus(String profile, Map<String, Object> identity, Map<String, Object> status) {
 		// TODO Auto-generated method stub
 
-	}
-
-	protected static IRestResponse newErrorResult(int errCode, String title, String detail) {
-		RestResponseImpl response = new RestResponseImpl();
-		response.setData(detail);
-		response.setErrorCode(errCode);
-		response.setResult(title);
-		return response;
-	}
-
-	private IRestResponse newExecutionResult(ExecutionResult result) {
-		RestResponseImpl response = new RestResponseImpl();
-		response.setData(result);
-		return response; // TODO will change later
 	}
 
 	@Override
@@ -231,15 +117,21 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 		assert(deviceStatus != null);
 		assert(deviceStatus.getIdentify() != null);
 		HGW2000Controller driver = getDriver(deviceStatus.getIdentify());
-		HgwCmdHandler handler = Helper.cmdHandlers.get(command);
-		if (handler == null) {
-			return newErrorResult(100, "Unsupport Command " + command, "<none>");
+		HGWDriverWrapper wrapper = Helper.getCommandWrapper(deviceStatus.getProfile(), command);
+		if (wrapper == null) {
+			Map<String, Object> errDetail = new HashMap<>();
+			errDetail.put("command", command);
+			errDetail.put("device_profile", deviceStatus.getProfile());
+			errDetail.put("device_ID", deviceStatus.getID());
+			return newErrorResult(ERR_WRONG_CMD_FOR_DEVICE_TYPE, "This device cannot support Command " + command,
+					errDetail);
 		}
-		return handler.handleCmd(this, driver, deviceStatus, params);
+		return wrapper.execute(driver, config, command, deviceStatus, params);
 	}
 
 	@Override
 	public void setConfig(Object cfgObject) {
 		config = (Hgw2000DriverConfig) cfgObject;
 	}
+
 }
