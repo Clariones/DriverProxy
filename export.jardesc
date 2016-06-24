@@ -11,18 +11,7 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.driverutils"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.devicedriver"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.layout"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;fi.iki.elonen"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.deviceprofile"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.restserver"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.listeningserver"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.devicestatus"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.driverproxy"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.protocol"/>
         <javaElement handleIdentifier="=TryNanoHttpdService/interface"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.command.management"/>
-        <javaElement handleIdentifier="=TryNanoHttpdService/src&lt;org.skynet.bgby.deviceconfig"/>
+        <javaElement handleIdentifier="=TryNanoHttpdService/src"/>
     </selectedElements>
 </jardesc>

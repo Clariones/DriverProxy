@@ -163,9 +163,9 @@ public class DriverProxyService {
 			if (deviceStatus == null) {
 				deviceStatus = new DeviceStatus();
 				deviceStatus.setID(devId);
+			}
 				deviceStatus.setProfile(devCfg.getProfile());
 				deviceStatus.setIdentify(devCfg.getIdentity());
-			}
 			IRestResponse response = driver.onCommand(command, deviceStatus, restRequest.getParams());
 			if (response.getRequest() == null){
 				response.setRequest(DriverUtils.getRequestFullUri(restRequest));

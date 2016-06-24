@@ -159,7 +159,7 @@ public abstract class RestClientBaseImpl implements IRestClient {
 		if (params == null || params.isEmpty()) {
 			return sb.toString();
 		}
-		TreeMap<String, String> sortedParams = new TreeMap<String, String>();
+		TreeMap<String, String> sortedParams = new TreeMap<String, String>(params);
 
 		Iterator<Entry<String, String>> it = sortedParams.entrySet().iterator();
 		while (it.hasNext()) {

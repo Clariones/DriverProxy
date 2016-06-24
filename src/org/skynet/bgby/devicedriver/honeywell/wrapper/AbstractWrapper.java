@@ -118,7 +118,7 @@ public abstract class AbstractWrapper implements HGWDriverWrapper {
 			result.put(cmdFormat[1], cmdName);
 			sIdx = 2;
 		}
-		String[] left = string.substring(pos + foundedCmd.length()).split(",");
+		String[] left = string.trim().substring(pos + foundedCmd.length()).split(",");
 		if (sIdx + left.length != cmdFormat.length) {
 			return null;
 		}
