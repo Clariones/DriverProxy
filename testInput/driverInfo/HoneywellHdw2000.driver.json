@@ -3,39 +3,8 @@
 	driverClass: "org.skynet.bgby.devicedriver.honeywell.Hgw2000",
 	configurationClass: "org.skynet.bgby.devicedriver.honeywell.Hgw2000DriverConfig",
 	configurationData: {
-		authConfig : {
-			"192.168.0.40" : {
-				"username":"admin",
-				"password":"123456",
-				"hostIPAddress":"192.168.0.40",
-				"port":10099
-			},
-			"192.168.0.41" : {
-				"username":"admin",
-				"password":"123456",
-				"hostIPAddress":"192.168.0.41",
-				"port":10099
-			},
-			"192.168.2.103" : {
-				"username":"admin",
-				"password":"123456",
-				"hostIPAddress":"192.168.2.103",
-				"port":10099
-			}
-		},
-		runningModes : {
-			"关机":0,
-			"制冷":1003,
-			"制热":1002,
-			"自动":1000,
-			"风":  1001,
-			"除湿":1004
-		},
-		fanModes : {
-			"自动": 0,
-			"高速": 3,
-			"舒适": 2,
-			"柔和": 1
-		}
+		defaultUserName: "admin",
+		defaultPassword: "123456",
+		defaultPort: 10099
 	}
 }

@@ -4,5 +4,9 @@
 	identity: {
 		"ipAddress":"192.168.0.41",
 		"id" : 102
+	},
+	extParams: {
+		userName: "admin",
+		password: "123456"
 	}
 }

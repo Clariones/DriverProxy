@@ -3,11 +3,27 @@
 	standard: "HVAC.Normal",
 	identifiers: ["ipAddress","id"],
 	spec: {
-		validRunningModes: ["关机","风", "除湿", "制冷","制热","自动"],
+		validRunningModes: ["关机","自动","风","制冷","制热","除湿"],
 		roomTemperatureRange: [16.0,35.0],
 		temperatureSettingRange:[16.0, 35.0],
-		validFanModes: ["自动","高速","舒适","柔和"],
+		validFanModes: ["自动","柔和","舒适","高速"],
 		humidityFunction: "no",
 		hasWingDirection: "no"
+	},
+	extParams : {
+		runningModes : {
+			"关机":0,
+			"自动":1000,
+			"风":  1001,
+			"制热":1002,
+			"制冷":1003,
+			"除湿":1004
+		},
+		fanModes : {
+			"自动": 0,
+			"柔和": 1,
+			"舒适": 2,
+			"高速": 3
+		}
 	}
 }

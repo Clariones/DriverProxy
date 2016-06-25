@@ -12,7 +12,6 @@ import org.skynet.bgby.command.management.CmdGetProfileByDevice;
 import org.skynet.bgby.deviceconfig.DeviceConfigData;
 import org.skynet.bgby.deviceconfig.DeviceConfigManager;
 import org.skynet.bgby.devicedriver.DeviceDriver;
-import org.skynet.bgby.devicedriver.DeviceDriverException;
 import org.skynet.bgby.devicedriver.DriverManager;
 import org.skynet.bgby.deviceprofile.DeviceProfile;
 import org.skynet.bgby.deviceprofile.DeviceProfileManager;
@@ -154,19 +153,33 @@ public class DriverProxyService {
 		}
 		String command = restRequest.getCommand();
 		String devId = restRequest.getTarget();
-		DeviceConfigData devCfg = getDeviceConfigManager().getDeviceConfigData(devId);
-		assert(devCfg != null);
 		try {
-			DeviceDriver driver = getDriverManager().lookupDriverForDevice(devId, devCfg.getProfile(),
-					devCfg.getIdentity());
+			// first, prepare the device status, profile and config
+			DeviceConfigData devCfg = getDeviceConfigManager().getDeviceConfigData(devId);
+			assert(devCfg != null);
 			DeviceStatus deviceStatus = getDeviceStatusManager().getDevice(devId);
 			if (deviceStatus == null) {
 				deviceStatus = new DeviceStatus();
 				deviceStatus.setID(devId);
 			}
-				deviceStatus.setProfile(devCfg.getProfile());
-				deviceStatus.setIdentify(devCfg.getIdentity());
-			IRestResponse response = driver.onCommand(command, deviceStatus, restRequest.getParams());
+			deviceStatus.setProfile(devCfg.getProfile());
+			deviceStatus.setIdentify(devCfg.getIdentity());
+			// second, find correct dirver for this device
+			DeviceDriver driver = getDriverManager().lookupDriverForDevice(devId, deviceStatus, devCfg);
+			if (driver == null){
+				throw new Exception("Cannot find any driver for " + devId);
+			}
+			DeviceProfile profile = getDeviceProfileManager().getProfile(devCfg.getProfile());
+			// then we can handle this command by that driver
+			ExecutionContext ctx = new ExecutionContext();
+			ctx.setCommand(command);
+			ctx.setCmdParams(restRequest.getParams());
+			ctx.setDevice(deviceStatus);
+			ctx.setProfile(profile);
+			ctx.setConfig(devCfg);
+			
+			IRestResponse response = driver.onCommand(ctx);
+			// and return result finally
 			if (response.getRequest() == null){
 				response.setRequest(DriverUtils.getRequestFullUri(restRequest));
 			}

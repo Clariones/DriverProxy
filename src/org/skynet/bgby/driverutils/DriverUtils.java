@@ -83,6 +83,10 @@ public class DriverUtils {
 			return !obj.equals(0);
 		}else if (obj instanceof String){
 			String val = ((String) obj).toLowerCase();
+			if (val.matches("\\d+(\\.\\d+)?")){
+				double dval = Double.valueOf(val);
+				return dval != 0;
+			}
 			if (val.equals("yes") || val.equals("true") || val.equals("on")){
 				return true;
 			}else{

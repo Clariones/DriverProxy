@@ -1,40 +1,26 @@
 package org.skynet.bgby.devicedriver.honeywell;
 
-import java.util.Map;
-
 public class Hgw2000DriverConfig {
-	protected Map<String, Configuration> authConfig;
-	protected Map<String, Integer> runningModes;
-	protected Map<String, Integer> fanModes;
+	protected String defaultUserName;
+	protected String defaultPassword;
+	protected int defaultPort;
 	
-	public Map<String, Integer> getFanModes() {
-		return fanModes;
+	public int getDefaultPort() {
+		return defaultPort;
 	}
-
-	public void setFanModes(Map<String, Integer> fanModes) {
-		this.fanModes = fanModes;
+	public void setDefaultPort(int defaultPort) {
+		this.defaultPort = defaultPort;
 	}
-
-	public Map<String, Integer> getRunningModes() {
-		return runningModes;
+	public String getDefaultUserName() {
+		return defaultUserName;
 	}
-
-	public void setRunningModes(Map<String, Integer> runningModes) {
-		this.runningModes = runningModes;
+	public void setDefaultUserName(String defaultUserName) {
+		this.defaultUserName = defaultUserName;
 	}
-
-	public Map<String, Configuration> getAuthConfig() {
-		return authConfig;
+	public String getDefaultPassword() {
+		return defaultPassword;
 	}
-
-	public void setAuthConfig(Map<String, Configuration> authConfig) {
-		this.authConfig = authConfig;
-	}
-	
-	public Configuration getConfigByIp(String ip){
-		if (authConfig == null){
-			return null;
-		}
-		return authConfig.get(ip);
+	public void setDefaultPassword(String defaultPassword) {
+		this.defaultPassword = defaultPassword;
 	}
 }

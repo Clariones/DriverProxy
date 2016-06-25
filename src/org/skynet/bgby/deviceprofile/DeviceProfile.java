@@ -7,6 +7,14 @@ public class DeviceProfile {
 	protected String standard;
 	protected String[] identifiers;
 	protected Map<String, Object> spec;
+	protected Map<String, Object> extParams;
+	
+	public Map<String, Object> getExtParams() {
+		return extParams;
+	}
+	public void setExtParams(Map<String, Object> extParams) {
+		this.extParams = extParams;
+	}
 	public String getID() {
 		return ID;
 	}
@@ -30,6 +38,12 @@ public class DeviceProfile {
 	}
 	public void setSpec(Map<String, Object> spec) {
 		this.spec = spec;
+	}
+	public Object getExtParam(String paramName) {
+		if (extParams == null){
+			return null;
+		}
+		return extParams.get(paramName);
 	}
 	
 	

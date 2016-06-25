@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import org.skynet.bgby.devicedriver.honeywell.ExecutionResult;
 import org.skynet.bgby.devicedriver.honeywell.HGW2000Controller;
 import org.skynet.bgby.devicedriver.honeywell.Hgw2000;
-import org.skynet.bgby.devicedriver.honeywell.Hgw2000DriverConfig;
 import org.skynet.bgby.devicestandard.SimpleDimmer;
 import org.skynet.bgby.devicestandard.SimpleLight;
 import org.skynet.bgby.devicestatus.DeviceStatus;
+import org.skynet.bgby.driverproxy.ExecutionContext;
 import org.skynet.bgby.driverutils.DriverUtils;
 import org.skynet.bgby.protocol.IRestResponse;
 import org.skynet.bgby.protocol.RestResponseImpl;
@@ -28,8 +28,7 @@ public class ControlHbusLight extends AbstractWrapper {
 	}
 
 	@Override
-	protected IRestResponse convertResultToResponse(String command, DeviceStatus status, Map<String, String> params,
-			ExecutionResult result) {
+	protected IRestResponse convertResultToResponse(ExecutionContext executionContext, ExecutionResult result) {
 		Map<String, String> data = super.parseResult(cmdFormat, result.getReceivedResponse());
 		if (data == null) {
 			return newWrongResponseResult(result);
@@ -63,11 +62,12 @@ public class ControlHbusLight extends AbstractWrapper {
 	}
 
 	@Override
-	protected IRestResponse updateAndCheckParams(String command, Object apiArgs, Map<String, String> params) {
+	protected IRestResponse updateAndCheckParams(ExecutionContext executionContext, Object apiArgs) {
 		if (!(apiArgs instanceof HBusLightArgs)) {
 			return newWrongStatusResult();
 		}
 		HBusLightArgs arg = (HBusLightArgs) apiArgs;
+		Map<String, String> params = executionContext.getCmdParams();
 		String state = params.get(SimpleDimmer.TERM_LIGHT_STATUES);
 		String level = params.get(SimpleDimmer.TERM_DIMMER_LEVEL);
 		if (state == null && level == null) {
@@ -102,10 +102,12 @@ public class ControlHbusLight extends AbstractWrapper {
 	}
 
 	@Override
-	protected Object createArgsFromStatus(Hgw2000DriverConfig config, DeviceStatus status) {
+	protected Object createArgsFromStatus(ExecutionContext ctx) {
 		HBusLightArgs args = new HBusLightArgs();
+		DeviceStatus status = ctx.getDevice();
 		args.loop = DriverUtils.getAsInt(status.getIdentify().get(Hgw2000.IDENTIFIER_ID), -1);
 		args.area = DriverUtils.getAsInt(status.getIdentify().get(Hgw2000.IDENTIFIER_AREA), -1);
+		
 		if (args.loop <= 0 || args.area <= 0) {
 			throw new RuntimeException(status.getID() + " profile loop and area not correct:" + status.getIdentify());
 		}
@@ -123,15 +125,14 @@ public class ControlHbusLight extends AbstractWrapper {
 		}
 		return args;
 	}
-
+	
 	@Override
-	protected void updateStatus(String command, DeviceStatus deviceStatus, Map<String, String> params,
-			IRestResponse response) {
+	protected void updateStatus(ExecutionContext ctx, IRestResponse response) {
 		if (response.getErrorCode() != 0) {
 			DriverUtils.log(Level.FINE, Hgw2000.TAG, "Response not success, do not update status");
 			return;
 		}
-		updateStatus(deviceStatus, (Map<String, Object>) response.getData(), SimpleDimmer.TERM_DIMMER_LEVEL,
+		updateStatus(ctx.getDevice(), (Map<String, Object>) response.getData(), SimpleDimmer.TERM_DIMMER_LEVEL,
 				SimpleDimmer.TERM_LIGHT_STATUES);
 	}
 

@@ -8,6 +8,7 @@ import org.skynet.bgby.devicedriver.honeywell.ExecutionResult;
 import org.skynet.bgby.devicedriver.honeywell.HGW2000Controller;
 import org.skynet.bgby.devicedriver.honeywell.Hgw2000DriverConfig;
 import org.skynet.bgby.devicestatus.DeviceStatus;
+import org.skynet.bgby.driverproxy.ExecutionContext;
 import org.skynet.bgby.protocol.IRestResponse;
 
 public class AbstractWrapperTest {
@@ -27,31 +28,34 @@ public class AbstractWrapperTest {
 class Testee extends AbstractWrapper {
 
 	@Override
-	protected IRestResponse convertResultToResponse(String command, DeviceStatus status, Map<String, String> params,
-			ExecutionResult result) {
-		return null;
-	}
-
-	@Override
 	protected ExecutionResult invokeDriver(HGW2000Controller driver, Object apiArgs) throws IOException {
-		return null;
-	}
-
-	@Override
-	protected IRestResponse updateAndCheckParams(String command, Object apiArgs, Map<String, String> params) {
-		return null;
-	}
-
-	@Override
-	protected Object createArgsFromStatus(Hgw2000DriverConfig config, DeviceStatus deviceStatus) {
-		return null;
-	}
-
-	@Override
-	protected void updateStatus(String command, DeviceStatus deviceStatus, Map<String, String> params,
-			IRestResponse response) {
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 
+	@Override
+	protected void updateStatus(ExecutionContext executionContext, IRestResponse response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected IRestResponse convertResultToResponse(ExecutionContext executionContext, ExecutionResult result) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected IRestResponse updateAndCheckParams(ExecutionContext executionContext, Object apiArgs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Object createArgsFromStatus(ExecutionContext executionContext) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

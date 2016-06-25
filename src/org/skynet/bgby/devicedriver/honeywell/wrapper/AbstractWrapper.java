@@ -13,10 +13,10 @@ import java.util.regex.Pattern;
 import org.skynet.bgby.devicedriver.honeywell.ExecutionResult;
 import org.skynet.bgby.devicedriver.honeywell.HGW2000Controller;
 import org.skynet.bgby.devicedriver.honeywell.Hgw2000;
-import org.skynet.bgby.devicedriver.honeywell.Hgw2000DriverConfig;
 import org.skynet.bgby.devicestandard.DeviceStandardBaseImpl;
 import org.skynet.bgby.devicestandard.NormalHVAC;
 import org.skynet.bgby.devicestatus.DeviceStatus;
+import org.skynet.bgby.driverproxy.ExecutionContext;
 import org.skynet.bgby.driverutils.DriverUtils;
 import org.skynet.bgby.protocol.IRestResponse;
 
@@ -39,6 +39,7 @@ public abstract class AbstractWrapper implements HGWDriverWrapper {
 	protected static final String FIELD_WING_DIRECTION = "dir";
 
 	private static final Map<String, Integer> errorCodes = new HashMap<>();
+
 	static {
 		errorCodes.put("0", 0);
 		errorCodes.put("1", Hgw2000.ERR_DEVICE_ACCESS_FAIL);
@@ -54,20 +55,20 @@ public abstract class AbstractWrapper implements HGWDriverWrapper {
 		errorCodes.put("133", Hgw2000.ERR_BUS_FAILURE);
 		errorCodes.put("134", Hgw2000.ERR_DEVICE_OFFLINE);
 	}
+
 	@Override
-	public IRestResponse execute(HGW2000Controller driver, Hgw2000DriverConfig config, String command,
-			DeviceStatus deviceStatus, Map<String, String> params) {
-		DriverUtils.log(Level.FINE, Hgw2000.TAG, "execute command {0} by {1}",
-				new Object[] { command, getClass().getSimpleName() });
-		Object apiArgs = createArgsFromStatus(config, deviceStatus);
-		IRestResponse checkParamsResult = updateAndCheckParams(command, apiArgs, params);
+	public IRestResponse execute(HGW2000Controller driver, ExecutionContext executionContext) {
+		DriverUtils.log(Level.FINE, Hgw2000.TAG, "execute command {0}{1} by {2}", new Object[] {
+				executionContext.getCommand(), executionContext.getCmdParams(), getClass().getSimpleName() });
+		Object apiArgs = createArgsFromStatus(executionContext);
+		IRestResponse checkParamsResult = updateAndCheckParams(executionContext, apiArgs);
 		if (checkParamsResult != null) {
 			return checkParamsResult;
 		}
 		try {
 			ExecutionResult result = invokeDriver(driver, apiArgs);
-			IRestResponse response = convertResultToResponse(command, deviceStatus, params, result);
-			updateStatus(command, deviceStatus, params, response);
+			IRestResponse response = convertResultToResponse(executionContext, result);
+			updateStatus(executionContext, response);
 			return response;
 		} catch (SocketTimeoutException e) {
 			e.printStackTrace();
@@ -84,17 +85,16 @@ public abstract class AbstractWrapper implements HGWDriverWrapper {
 		}
 	}
 
-	protected abstract void updateStatus(String command, DeviceStatus deviceStatus, Map<String, String> params,
-			IRestResponse response);
-
-	protected abstract IRestResponse convertResultToResponse(String command, DeviceStatus deviceStatus, Map<String, String> params,
-			ExecutionResult result);
 
 	protected abstract ExecutionResult invokeDriver(HGW2000Controller driver, Object apiArgs) throws IOException;
 
-	protected abstract IRestResponse updateAndCheckParams(String command, Object apiArgs, Map<String, String> params);
+	protected abstract void updateStatus(ExecutionContext executionContext, IRestResponse response);
 
-	protected abstract Object createArgsFromStatus(Hgw2000DriverConfig config, DeviceStatus deviceStatus);
+	protected abstract IRestResponse convertResultToResponse(ExecutionContext executionContext, ExecutionResult result);
+
+	protected abstract IRestResponse updateAndCheckParams(ExecutionContext executionContext, Object apiArgs);
+
+	protected abstract Object createArgsFromStatus(ExecutionContext executionContext);
 
 	protected static Pattern PTN_SPLITER_1 = Pattern.compile("\\$((cfg)|(ack)|(req)|(res))\\s*,");
 
@@ -139,11 +139,12 @@ public abstract class AbstractWrapper implements HGWDriverWrapper {
 				result.getReceivedResponse());
 	}
 
-	protected String getKeyByIntValue(Map<String, Integer> data, int number) {
-		Iterator<Entry<String, Integer>> it = data.entrySet().iterator();
+	protected String getKeyByIntValue(Map<String, Object> map, int number) {
+		Iterator<Entry<String, Object>> it = map.entrySet().iterator();
 		while (it.hasNext()) {
-			Entry<String, Integer> ent = it.next();
-			if (ent.getValue().equals(number)){
+			Entry<String, Object> ent = it.next();
+			int val = DriverUtils.getAsInt(ent.getValue(), -2);
+			if (val == number) {
 				return ent.getKey();
 			}
 		}
@@ -152,19 +153,19 @@ public abstract class AbstractWrapper implements HGWDriverWrapper {
 
 	protected int toApiErrorCode(String strErr) {
 		Integer code = errorCodes.get(strErr);
-		if (code == null){
+		if (code == null) {
 			return Hgw2000.ERR_WRONG_RESPONSE_ERROR;
 		}
 		return code;
 	}
 
-	protected void updateStatus(DeviceStatus deviceStatus, Map<String, Object> resultData, String ... terms) {
-		if (terms == null || terms.length == 0){
+	protected void updateStatus(DeviceStatus deviceStatus, Map<String, Object> resultData, String... terms) {
+		if (terms == null || terms.length == 0) {
 			return;
 		}
-		for(String term : terms){
+		for (String term : terms) {
 			Object value = resultData.get(term);
-			if (value == null){
+			if (value == null) {
 				continue;
 			}
 			deviceStatus.setStatus(term, value);

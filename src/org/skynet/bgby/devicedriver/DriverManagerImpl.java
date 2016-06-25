@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import org.skynet.bgby.deviceconfig.DeviceConfigData;
 import org.skynet.bgby.deviceconfig.DeviceConfigManager;
+import org.skynet.bgby.deviceprofile.DeviceProfile;
 import org.skynet.bgby.deviceprofile.DeviceProfileManager;
 import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.devicestatus.DeviceStatusManager;
@@ -86,7 +87,7 @@ public abstract class DriverManagerImpl implements DriverManager {
 		}
 		for (DeviceStatus device : deviceStatus) {
 			DeviceConfigData config = getDeviceConfigManager().getDeviceConfigData(device.getID());
-			DeviceDriver driver = lookupDriverForDevice(device.getID(), device.getProfile(), config.getIdentity());
+			DeviceDriver driver = lookupDriverForDevice(device.getID(), device, config);
 			if (driver == null){
 				String msg = String.format("Cannot found any driver for device %s(%s,%s)",
 						device.getID(), device.getProfile(), config.getIdentity());
@@ -97,17 +98,21 @@ public abstract class DriverManagerImpl implements DriverManager {
 		}
 	}
 
+	
 	@Override
-	public DeviceDriver lookupDriverForDevice(String deviceID, String profile, Map<String, Object> identify)
+	public DeviceDriver lookupDriverForDevice(String deviceID, DeviceStatus deviceStatus, DeviceConfigData devCfg)
 			throws DPModuleException {
+		// first, try to get cached driver
 		if (driverMap != null && driverMap.containsKey(deviceID)) {
 			return driverMap.get(deviceID);
 		}
-
+		
+		// then go through all the loaded drivers, find the on which can drive this device
 		Iterator<DeviceDriver> it = driverList.iterator();
+		DeviceProfile profile = this.getDeviceProfileManager().getProfile(devCfg.getProfile());
 		while(it.hasNext()){
 			DeviceDriver driver = it.next();
-			if (driver.canDriverDevice(deviceID, profile, identify)){
+			if (driver.canDriverDevice(deviceID, deviceStatus, profile, devCfg)){
 				putIntoDriverMap(deviceID, driver);
 				return driver;
 			}
@@ -153,6 +158,13 @@ public abstract class DriverManagerImpl implements DriverManager {
 		startingReporter = reporter;
 	}
 
+	/**
+	 * Create driver with their register info (which from file now)
+	 * @param config
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
 	protected void createDriver(DriverRegisterInfo config)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		DeviceDriver driver = (DeviceDriver) Class.forName(config.getDriverClass()).newInstance();
