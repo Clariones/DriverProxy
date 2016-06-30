@@ -167,11 +167,11 @@ public abstract class NanoHTTPD {
      */
     public class ClientHandler implements Runnable {
 
-        private final InputStream inputStream;
+        protected final InputStream inputStream;
 
-        private final Socket acceptSocket;
+        protected final Socket acceptSocket;
 
-        private ClientHandler(InputStream inputStream, Socket acceptSocket) {
+        protected ClientHandler(InputStream inputStream, Socket acceptSocket) {
             this.inputStream = inputStream;
             this.acceptSocket = acceptSocket;
         }
@@ -221,7 +221,7 @@ public abstract class NanoHTTPD {
             return dateFormat.format(calendar.getTime());
         }
 
-        private final String n, v, e;
+        protected final String n, v, e;
 
         public Cookie(String name, String value) {
             this(name, value, 30);
@@ -254,9 +254,9 @@ public abstract class NanoHTTPD {
      */
     public class CookieHandler implements Iterable<String> {
 
-        private final HashMap<String, String> cookies = new HashMap<String, String>();
+        protected final HashMap<String, String> cookies = new HashMap<String, String>();
 
-        private final ArrayList<Cookie> queue = new ArrayList<Cookie>();
+        protected final ArrayList<Cookie> queue = new ArrayList<Cookie>();
 
         public CookieHandler(Map<String, String> httpHeaders) {
             String raw = httpHeaders.get("cookie");
@@ -342,9 +342,9 @@ public abstract class NanoHTTPD {
      */
     public static class DefaultAsyncRunner implements AsyncRunner {
 
-        private long requestCount;
+        protected long requestCount;
 
-        private final List<ClientHandler> running = Collections.synchronizedList(new ArrayList<NanoHTTPD.ClientHandler>());
+        protected final List<ClientHandler> running = Collections.synchronizedList(new ArrayList<NanoHTTPD.ClientHandler>());
 
         /**
          * @return a list with currently running clients.
@@ -387,9 +387,9 @@ public abstract class NanoHTTPD {
      */
     public static class DefaultTempFile implements TempFile {
 
-        private final File file;
+        protected final File file;
 
-        private final OutputStream fstream;
+        protected final OutputStream fstream;
 
         public DefaultTempFile(File tempdir) throws IOException {
             this.file = File.createTempFile("NanoHTTPD-", "", tempdir);
@@ -427,9 +427,9 @@ public abstract class NanoHTTPD {
      */
     public static class DefaultTempFileManager implements TempFileManager {
 
-        private final File tmpdir;
+        protected final File tmpdir;
 
-        private final List<TempFile> tempFiles;
+        protected final List<TempFile> tempFiles;
 
         public DefaultTempFileManager() {
             this.tmpdir = new File(System.getProperty("java.io.tmpdir"));
@@ -462,7 +462,7 @@ public abstract class NanoHTTPD {
     /**
      * Default strategy for creating and cleaning up temporary files.
      */
-    private class DefaultTempFileManagerFactory implements TempFileManagerFactory {
+    protected class DefaultTempFileManagerFactory implements TempFileManagerFactory {
 
         @Override
         public TempFileManager create() {
@@ -487,9 +487,9 @@ public abstract class NanoHTTPD {
      */
     public static class SecureServerSocketFactory implements ServerSocketFactory {
 
-        private SSLServerSocketFactory sslServerSocketFactory;
+        protected SSLServerSocketFactory sslServerSocketFactory;
 
-        private String[] sslProtocols;
+        protected String[] sslProtocols;
 
         public SecureServerSocketFactory(SSLServerSocketFactory sslServerSocketFactory, String[] sslProtocols) {
             this.sslServerSocketFactory = sslServerSocketFactory;
@@ -513,43 +513,43 @@ public abstract class NanoHTTPD {
 
     }
 
-    private static final String CONTENT_DISPOSITION_REGEX = "([ |\t]*Content-Disposition[ |\t]*:)(.*)";
+    protected static final String CONTENT_DISPOSITION_REGEX = "([ |\t]*Content-Disposition[ |\t]*:)(.*)";
 
-    private static final Pattern CONTENT_DISPOSITION_PATTERN = Pattern.compile(CONTENT_DISPOSITION_REGEX, Pattern.CASE_INSENSITIVE);
+    protected static final Pattern CONTENT_DISPOSITION_PATTERN = Pattern.compile(CONTENT_DISPOSITION_REGEX, Pattern.CASE_INSENSITIVE);
 
-    private static final String CONTENT_TYPE_REGEX = "([ |\t]*content-type[ |\t]*:)(.*)";
+    protected static final String CONTENT_TYPE_REGEX = "([ |\t]*content-type[ |\t]*:)(.*)";
 
-    private static final Pattern CONTENT_TYPE_PATTERN = Pattern.compile(CONTENT_TYPE_REGEX, Pattern.CASE_INSENSITIVE);
+    protected static final Pattern CONTENT_TYPE_PATTERN = Pattern.compile(CONTENT_TYPE_REGEX, Pattern.CASE_INSENSITIVE);
 
-    private static final String CONTENT_DISPOSITION_ATTRIBUTE_REGEX = "[ |\t]*([a-zA-Z]*)[ |\t]*=[ |\t]*['|\"]([^\"^']*)['|\"]";
+    protected static final String CONTENT_DISPOSITION_ATTRIBUTE_REGEX = "[ |\t]*([a-zA-Z]*)[ |\t]*=[ |\t]*['|\"]([^\"^']*)['|\"]";
 
-    private static final Pattern CONTENT_DISPOSITION_ATTRIBUTE_PATTERN = Pattern.compile(CONTENT_DISPOSITION_ATTRIBUTE_REGEX);
+    protected static final Pattern CONTENT_DISPOSITION_ATTRIBUTE_PATTERN = Pattern.compile(CONTENT_DISPOSITION_ATTRIBUTE_REGEX);
 
     protected static class ContentType {
 
-        private static final String ASCII_ENCODING = "US-ASCII";
+        protected static final String ASCII_ENCODING = "US-ASCII";
 
-        private static final String MULTIPART_FORM_DATA_HEADER = "multipart/form-data";
+        protected static final String MULTIPART_FORM_DATA_HEADER = "multipart/form-data";
 
-        private static final String CONTENT_REGEX = "[ |\t]*([^/^ ^;^,]+/[^ ^;^,]+)";
+        protected static final String CONTENT_REGEX = "[ |\t]*([^/^ ^;^,]+/[^ ^;^,]+)";
 
-        private static final Pattern MIME_PATTERN = Pattern.compile(CONTENT_REGEX, Pattern.CASE_INSENSITIVE);
+        protected static final Pattern MIME_PATTERN = Pattern.compile(CONTENT_REGEX, Pattern.CASE_INSENSITIVE);
 
-        private static final String CHARSET_REGEX = "[ |\t]*(charset)[ |\t]*=[ |\t]*['|\"]?([^\"^'^;^,]*)['|\"]?";
+        protected static final String CHARSET_REGEX = "[ |\t]*(charset)[ |\t]*=[ |\t]*['|\"]?([^\"^'^;^,]*)['|\"]?";
 
-        private static final Pattern CHARSET_PATTERN = Pattern.compile(CHARSET_REGEX, Pattern.CASE_INSENSITIVE);
+        protected static final Pattern CHARSET_PATTERN = Pattern.compile(CHARSET_REGEX, Pattern.CASE_INSENSITIVE);
 
-        private static final String BOUNDARY_REGEX = "[ |\t]*(boundary)[ |\t]*=[ |\t]*['|\"]?([^\"^'^;^,]*)['|\"]?";
+        protected static final String BOUNDARY_REGEX = "[ |\t]*(boundary)[ |\t]*=[ |\t]*['|\"]?([^\"^'^;^,]*)['|\"]?";
 
-        private static final Pattern BOUNDARY_PATTERN = Pattern.compile(BOUNDARY_REGEX, Pattern.CASE_INSENSITIVE);
+        protected static final Pattern BOUNDARY_PATTERN = Pattern.compile(BOUNDARY_REGEX, Pattern.CASE_INSENSITIVE);
 
-        private final String contentTypeHeader;
+        protected final String contentTypeHeader;
 
-        private final String contentType;
+        protected final String contentType;
 
-        private final String encoding;
+        protected final String encoding;
 
-        private final String boundary;
+        protected final String boundary;
 
         public ContentType(String contentTypeHeader) {
             this.contentTypeHeader = contentTypeHeader;
@@ -567,7 +567,7 @@ public abstract class NanoHTTPD {
             }
         }
 
-        private String getDetailFromContentHeader(String contentTypeHeader, Pattern pattern, String defaultValue, int group) {
+        protected String getDetailFromContentHeader(String contentTypeHeader, Pattern pattern, String defaultValue, int group) {
             Matcher matcher = pattern.matcher(contentTypeHeader);
             return matcher.find() ? matcher.group(group) : defaultValue;
         }
@@ -602,41 +602,41 @@ public abstract class NanoHTTPD {
 
     protected class HTTPSession implements IHTTPSession {
 
-        private static final int REQUEST_BUFFER_LEN = 512;
+        protected static final int REQUEST_BUFFER_LEN = 512;
 
-        private static final int MEMORY_STORE_LIMIT = 1024;
+        protected static final int MEMORY_STORE_LIMIT = 1024;
 
         public static final int BUFSIZE = 8192;
 
         public static final int MAX_HEADER_SIZE = 1024;
 
-        private final TempFileManager tempFileManager;
+        protected final TempFileManager tempFileManager;
 
-        private final OutputStream outputStream;
+        protected final OutputStream outputStream;
 
-        private final BufferedInputStream inputStream;
+        protected final BufferedInputStream inputStream;
 
-        private int splitbyte;
+        protected int splitbyte;
 
-        private int rlen;
+        protected int rlen;
 
-        private String uri;
+        protected String uri;
 
-        private Method method;
+        protected Method method;
 
-        private Map<String, String> parms;
+        protected Map<String, String> parms;
 
-        private Map<String, String> headers;
+        protected Map<String, String> headers;
 
-        private CookieHandler cookies;
+        protected CookieHandler cookies;
 
-        private String queryParameterString;
+        protected String queryParameterString;
 
-        private String remoteIp;
+        protected String remoteIp;
 
-        private String remoteHostname;
+        protected String remoteHostname;
 
-        private String protocolVersion;
+        protected String protocolVersion;
 
         public HTTPSession(TempFileManager tempFileManager, InputStream inputStream, OutputStream outputStream) {
             this.tempFileManager = tempFileManager;
@@ -656,7 +656,7 @@ public abstract class NanoHTTPD {
         /**
          * Decodes the sent headers and loads the data into Key/value pairs
          */
-        private void decodeHeader(BufferedReader in, Map<String, String> pre, Map<String, String> parms, Map<String, String> headers) throws ResponseException {
+        protected void decodeHeader(BufferedReader in, Map<String, String> pre, Map<String, String> parms, Map<String, String> headers) throws ResponseException {
             try {
                 // Read the request line
                 String inLine = in.readLine();
@@ -714,7 +714,7 @@ public abstract class NanoHTTPD {
         /**
          * Decodes the Multipart Body data and put it into Key/Value pairs.
          */
-        private void decodeMultipartFormData(ContentType contentType, ByteBuffer fbuf, Map<String, String> parms, Map<String, String> files) throws ResponseException {
+        protected void decodeMultipartFormData(ContentType contentType, ByteBuffer fbuf, Map<String, String> parms, Map<String, String> files) throws ResponseException {
             int pcount = 0;
             try {
                 int[] boundaryIdxs = getBoundaryPositions(fbuf, contentType.getBoundary().getBytes());
@@ -810,7 +810,7 @@ public abstract class NanoHTTPD {
             }
         }
 
-        private int scipOverNewLine(byte[] partHeaderBuff, int index) {
+        protected int scipOverNewLine(byte[] partHeaderBuff, int index) {
             while (partHeaderBuff[index] != '\n') {
                 index++;
             }
@@ -823,7 +823,7 @@ public abstract class NanoHTTPD {
          * Map. NOTE: this doesn't support multiple identical keys due to the
          * simplicity of Map.
          */
-        private void decodeParms(String parms, Map<String, String> p) {
+        protected void decodeParms(String parms, Map<String, String> p) {
             if (parms == null) {
                 this.queryParameterString = "";
                 return;
@@ -969,7 +969,7 @@ public abstract class NanoHTTPD {
          * Find byte index separating header from body. It must be the last byte
          * of the first two sequential new lines.
          */
-        private int findHeaderEnd(final byte[] buf, int rlen) {
+        protected int findHeaderEnd(final byte[] buf, int rlen) {
             int splitbyte = 0;
             while (splitbyte + 1 < rlen) {
 
@@ -992,7 +992,7 @@ public abstract class NanoHTTPD {
          * a large block at a time and uses a temporary buffer to optimize
          * (memory mapped) file access.
          */
-        private int[] getBoundaryPositions(ByteBuffer b, byte[] boundary) {
+        protected int[] getBoundaryPositions(ByteBuffer b, byte[] boundary) {
             int[] res = new int[0];
             if (b.remaining() < boundary.length) {
                 return res;
@@ -1063,7 +1063,7 @@ public abstract class NanoHTTPD {
             return this.queryParameterString;
         }
 
-        private RandomAccessFile getTmpBucket() {
+        protected RandomAccessFile getTmpBucket() {
             try {
                 TempFile tempFile = this.tempFileManager.createTempFile(null);
                 return new RandomAccessFile(tempFile.getName(), "rw");
@@ -1162,7 +1162,7 @@ public abstract class NanoHTTPD {
          * Retrieves the content of a sent file and saves it to a temporary
          * file. The full path to the saved file is returned.
          */
-        private String saveTmpFile(ByteBuffer b, int offset, int len, String filename_hint) {
+        protected String saveTmpFile(ByteBuffer b, int offset, int len, String filename_hint) {
             String path = "";
             if (len > 0) {
                 FileOutputStream fileOutputStream = null;
@@ -1343,9 +1343,9 @@ public abstract class NanoHTTPD {
             CLIENT_INVALID_PARAMETERS(804, "Client parameters Error");
             
 
-            private final int requestStatus;
+            protected final int requestStatus;
 
-            private final String description;
+            protected final String description;
 
             Status(int requestStatus, String description) {
                 this.requestStatus = requestStatus;
@@ -1378,7 +1378,7 @@ public abstract class NanoHTTPD {
          * OutputStream according to chunked transfer:
          * http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1
          */
-        private static class ChunkedOutputStream extends FilterOutputStream {
+        protected static class ChunkedOutputStream extends FilterOutputStream {
 
             public ChunkedOutputStream(OutputStream out) {
                 super(out);
@@ -1415,26 +1415,26 @@ public abstract class NanoHTTPD {
         /**
          * HTTP status code after processing, e.g. "200 OK", Status.OK
          */
-        private IStatus status;
+        protected IStatus status;
 
         /**
          * MIME type of content, e.g. "text/html"
          */
-        private String mimeType;
+        protected String mimeType;
 
         /**
          * Data of the response, may be null.
          */
-        private InputStream data;
+        protected InputStream data;
 
-        private long contentLength;
+        protected long contentLength;
 
         /**
          * Headers for the HTTP response. Use addHeader() to add lines. the
          * lowercase map is automatically kept up to date.
          */
         @SuppressWarnings("serial")
-        private final Map<String, String> header = new HashMap<String, String>() {
+        protected final Map<String, String> header = new HashMap<String, String>() {
 
             public String put(String key, String value) {
                 lowerCaseHeader.put(key == null ? key : key.toLowerCase(), value);
@@ -1446,21 +1446,21 @@ public abstract class NanoHTTPD {
          * copy of the header map with all the keys lowercase for faster
          * searching.
          */
-        private final Map<String, String> lowerCaseHeader = new HashMap<String, String>();
+        protected final Map<String, String> lowerCaseHeader = new HashMap<String, String>();
 
         /**
          * The request method that spawned this response.
          */
-        private Method requestMethod;
+        protected Method requestMethod;
 
         /**
          * Use chunkedTransfer
          */
-        private boolean chunkedTransfer;
+        protected boolean chunkedTransfer;
 
-        private boolean encodeAsGzip;
+        protected boolean encodeAsGzip;
 
-        private boolean keepAlive;
+        protected boolean keepAlive;
 
         /**
          * Creates a fixed length response if totalBytes>=0, otherwise chunked.
@@ -1610,7 +1610,7 @@ public abstract class NanoHTTPD {
             return size;
         }
 
-        private void sendBodyWithCorrectTransferAndEncoding(OutputStream outputStream, long pending) throws IOException {
+        protected void sendBodyWithCorrectTransferAndEncoding(OutputStream outputStream, long pending) throws IOException {
             if (this.requestMethod != Method.HEAD && this.chunkedTransfer) {
                 ChunkedOutputStream chunkedOutputStream = new ChunkedOutputStream(outputStream);
                 sendBodyWithCorrectEncoding(chunkedOutputStream, -1);
@@ -1620,7 +1620,7 @@ public abstract class NanoHTTPD {
             }
         }
 
-        private void sendBodyWithCorrectEncoding(OutputStream outputStream, long pending) throws IOException {
+        protected void sendBodyWithCorrectEncoding(OutputStream outputStream, long pending) throws IOException {
             if (encodeAsGzip) {
                 GZIPOutputStream gzipOutputStream = new GZIPOutputStream(outputStream);
                 sendBody(gzipOutputStream, -1);
@@ -1643,7 +1643,7 @@ public abstract class NanoHTTPD {
          * @throws IOException
          *             if something goes wrong while sending the data.
          */
-        private void sendBody(OutputStream outputStream, long pending) throws IOException {
+        protected void sendBody(OutputStream outputStream, long pending) throws IOException {
             long BUFFER_SIZE = 16 * 1024;
             byte[] buff = new byte[(int) BUFFER_SIZE];
             boolean sendEverything = pending == -1;
@@ -1683,9 +1683,9 @@ public abstract class NanoHTTPD {
 
     public static final class ResponseException extends Exception {
 
-        private static final long serialVersionUID = 6569838532917408380L;
+        protected static final long serialVersionUID = 6569838532917408380L;
 
-        private final Response.Status status;
+        protected final Response.Status status;
 
         public ResponseException(Response.Status status, String message) {
             super(message);
@@ -1707,13 +1707,13 @@ public abstract class NanoHTTPD {
      */
     public class ServerRunnable implements Runnable {
 
-        private final int timeout;
+        protected final int timeout;
 
-        private IOException bindException;
+        protected IOException bindException;
 
-        private boolean hasBinded = false;
+        protected boolean hasBinded = false;
 
-        private ServerRunnable(int timeout) {
+        protected ServerRunnable(int timeout) {
             this.timeout = timeout;
         }
 
@@ -1729,6 +1729,7 @@ public abstract class NanoHTTPD {
             do {
                 try {
                     final Socket finalAccept = NanoHTTPD.this.myServerSocket.accept();
+                    System.out.println("====================================================");
                     if (this.timeout > 0) {
                         finalAccept.setSoTimeout(this.timeout);
                     }
@@ -1811,12 +1812,12 @@ public abstract class NanoHTTPD {
      * Pseudo-Parameter to use to store the actual query string in the
      * parameters map for later re-processing.
      */
-    private static final String QUERY_STRING_PARAMETER = "NanoHttpd.QUERY_STRING";
+    protected static final String QUERY_STRING_PARAMETER = "NanoHttpd.QUERY_STRING";
 
     /**
      * logger to log to.
      */
-    private static final Logger LOG = Logger.getLogger(NanoHTTPD.class.getName());
+    protected static final Logger LOG = Logger.getLogger(NanoHTTPD.class.getName());
 
     /**
      * Hashtable mapping (String)FILENAME_EXTENSION -> (String)MIME_TYPE
@@ -1839,7 +1840,7 @@ public abstract class NanoHTTPD {
         "unchecked",
         "rawtypes"
     })
-    private static void loadMimeTypes(Map<String, String> result, String resourceName) {
+    protected static void loadMimeTypes(Map<String, String> result, String resourceName) {
         try {
             Enumeration<URL> resources = NanoHTTPD.class.getClassLoader().getResources(resourceName);
             while (resources.hasMoreElements()) {
@@ -1931,7 +1932,7 @@ public abstract class NanoHTTPD {
         return mime == null ? "application/octet-stream" : mime;
     }
 
-    private static final void safeClose(Object closeable) {
+    protected static final void safeClose(Object closeable) {
         try {
             if (closeable != null) {
                 if (closeable instanceof Closeable) {
@@ -1949,15 +1950,15 @@ public abstract class NanoHTTPD {
         }
     }
 
-    private final String hostname;
+    protected final String hostname;
 
-    private final int myPort;
+    protected final int myPort;
 
-    private volatile ServerSocket myServerSocket;
+    protected volatile ServerSocket myServerSocket;
 
-    private ServerSocketFactory serverSocketFactory = new DefaultServerSocketFactory();
+    protected ServerSocketFactory serverSocketFactory = new DefaultServerSocketFactory();
 
-    private Thread myThread;
+    protected Thread myThread;
 
     /**
      * Pluggable strategy for asynchronously executing requests.
@@ -1967,7 +1968,7 @@ public abstract class NanoHTTPD {
     /**
      * Pluggable strategy for creating and cleaning up temporary files.
      */
-    private TempFileManagerFactory tempFileManagerFactory;
+    protected TempFileManagerFactory tempFileManagerFactory;
 
     /**
      * Constructs an HTTP server on given port.

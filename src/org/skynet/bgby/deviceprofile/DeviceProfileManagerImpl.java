@@ -2,10 +2,12 @@ package org.skynet.bgby.deviceprofile;
 
 import org.skynet.bgby.driverproxy.DPModuleException;
 import org.skynet.bgby.driverproxy.DPModuleStatusReporter;
+import org.skynet.bgby.driverproxy.DriverProxyService;
 
 public class DeviceProfileManagerImpl implements DeviceProfileManager {
 	protected DeviceProfileRepository repository;
 	protected DPModuleStatusReporter startingReporter;
+	protected DriverProxyService proxy;
 	
 	public DeviceProfileRepository getRepository() {
 		return repository;
@@ -34,6 +36,11 @@ public class DeviceProfileManagerImpl implements DeviceProfileManager {
 	@Override
 	public void setStartingReporter(DPModuleStatusReporter reporter) {
 		startingReporter = reporter;
+	}
+
+	@Override
+	public void setDriverProxy(DriverProxyService proxy) {
+		this.proxy = proxy;
 	}
 
 }

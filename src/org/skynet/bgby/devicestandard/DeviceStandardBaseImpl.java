@@ -9,6 +9,7 @@ public abstract class DeviceStandardBaseImpl implements DeviceStandard {
 	}
 
 	public static final String TERM_DISPLAY_NAME = "displayName";
+	public static final String TERM_CAN_QUERY = "canQueryStatus";
 	public static final String CMD_GET_ALL = "getAll";
 	public static final String CMD_SET_ALL = "setAll";
 	

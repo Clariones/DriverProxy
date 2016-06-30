@@ -14,9 +14,9 @@ import java.util.logging.Level;
 import org.skynet.bgby.driverutils.DriverUtils;
 
 public class UdpMessageCodec {
-	private static final String LINE_SEPARATOR = "\r\n";
+	protected static final String LINE_SEPARATOR = "\r\n";
 	protected static final Charset utf8 = Charset.forName("UTF-8");
-	private static final String TAG = UdpMessageCodec.class.getName();
+	protected static final String TAG = UdpMessageCodec.class.getName();
 	
 	public UdpMessage decode(UdpData udpData) {
 		byte[] data = udpData.getData();
@@ -73,7 +73,7 @@ public class UdpMessageCodec {
 		return rstMessage;
 	}
 
-	private String pickByKey(String fieldName, Map<String, String> inputs) {
+	protected String pickByKey(String fieldName, Map<String, String> inputs) {
 		return inputs.remove(fieldName);
 	}
 
@@ -84,14 +84,16 @@ public class UdpMessageCodec {
 		}
 		StringBuilder sb = new StringBuilder();
 		appendField(sb, UdpMessage.FIELD_COMMAND, responseMessage.getCommand());
-		appendField(sb, UdpMessage.FIELD_FROM_APP, responseMessage.getCommand());
-		appendField(sb, UdpMessage.FIELD_DEVICE, responseMessage.getCommand());
+		appendField(sb, UdpMessage.FIELD_FROM_APP, responseMessage.getFromApp());
+		appendField(sb, UdpMessage.FIELD_DEVICE, responseMessage.getFromDevice());
 		appendToList(sb, responseMessage);
 		appendParams(sb, responseMessage);
-		return null;
+		UdpData data = new UdpData();
+		data.setData(sb.toString().getBytes());
+		return data;
 	}
 
-	private void appendParams(StringBuilder sb, UdpMessage responseMessage) {
+	protected void appendParams(StringBuilder sb, UdpMessage responseMessage) {
 		Map<String, String> params = responseMessage.getParams();
 		if (params == null || params.isEmpty()){
 			return;
@@ -104,7 +106,7 @@ public class UdpMessageCodec {
 		}
 	}
 
-	private void appendToList(StringBuilder sb, UdpMessage responseMessage) {
+	protected void appendToList(StringBuilder sb, UdpMessage responseMessage) {
 		List<String> list = responseMessage.getReceivers();
 		if (list == null || list.isEmpty()){
 			return;
@@ -127,7 +129,7 @@ public class UdpMessageCodec {
 		sb.append(LINE_SEPARATOR);
 	}
 
-	private void appendField(StringBuilder sb, String fieldName, String fieldValue) {
+	protected void appendField(StringBuilder sb, String fieldName, String fieldValue) {
 		if (fieldValue == null || fieldValue.isEmpty()){
 			return;
 		}

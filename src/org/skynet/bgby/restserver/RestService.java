@@ -21,7 +21,7 @@ import fi.iki.elonen.NanoHTTPD.Response.Status;
 
 public class RestService extends NanoHTTPD {
 
-	private static final String TAG = RestService.class.getName();
+	protected static final String TAG = RestService.class.getName();
 	protected RestRequestCodec protocolHandler;
 	protected List<IRestRequestHandler> restCommandHandlers;
 
@@ -88,7 +88,7 @@ public class RestService extends NanoHTTPD {
 		return newFixedLengthResponse(status, mimeType, data, totalBytes);
 	}
 
-	private Response responseInvalidRestRequest(IHTTPSession session) {
+	protected Response responseInvalidRestRequest(IHTTPSession session) {
 		String rstMessage = "bad request: " + session.getUri();
 		if (session.getQueryParameterString() != null) {
 			rstMessage += "?" + session.getQueryParameterString();

@@ -15,10 +15,15 @@ import java.net.SocketTimeoutException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.logging.Level;
+
+import org.skynet.bgby.driverutils.DriverUtils;
 
 import com.google.gson.Gson;
 
 public class HGW2000Controller {
+
+	private static final String TAG = HGW2000Controller.class.getName();
 
 	public HGW2000Controller() {
 
@@ -26,12 +31,12 @@ public class HGW2000Controller {
 
 	}
 
-	private Configuration configuration;
+	protected Configuration configuration;
 
-	private String hostName;
-	private int port;
+	protected String hostName;
+	protected int port;
 
-	private String errorMessage;
+	protected String errorMessage;
 
 	public String viewLog() throws IOException {
 
@@ -169,7 +174,7 @@ public class HGW2000Controller {
 	}
 
 	InetSocketAddress gatewayAddress;
-	private DatagramSocket clientSocket;
+	protected DatagramSocket clientSocket;
 
 	public String getHostName() {
 		return hostName;
@@ -239,14 +244,12 @@ public class HGW2000Controller {
 
 	}
 
-	private void logln(String message) {
-
-		System.out.println(message);
+	protected void logln(String message) {
+		DriverUtils.log(Level.FINE, TAG, message);
 	}
 
-	private void log(String message) {
-
-		System.out.print(message);
+	protected void log(String message) {
+		DriverUtils.log(Level.FINE, TAG, message);
 	}
 
 	/*
@@ -640,9 +643,9 @@ public class HGW2000Controller {
 
 	}
 
-	private Object lock = new Object();
+	protected Object lock = new Object();
 
-	private String retryCommand(String command) throws IOException {
+	protected String retryCommand(String command) throws IOException {
 		
 		synchronized (lock) {
 			if(this.token==null){
@@ -677,7 +680,7 @@ public class HGW2000Controller {
 
 	}
 
-	private String executeCommand(String command) throws IOException {
+	protected String executeCommand(String command) throws IOException {
 
 
 		String commandWithToken=this.getToken()+command;
@@ -802,7 +805,7 @@ public class HGW2000Controller {
 
 	}
 
-	private static String toHexString(byte[] fieldData) {
+	protected static String toHexString(byte[] fieldData) {
 		StringBuilder resultBuffer = new StringBuilder();
 		for (int i = 0; i < fieldData.length; i++) {
 			int v = (fieldData[i] & 0xFF);
@@ -814,7 +817,7 @@ public class HGW2000Controller {
 		return resultBuffer.toString();
 	}
 
-	private String token;
+	protected String token;
 
 	public void close() {
 

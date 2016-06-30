@@ -38,7 +38,8 @@ public abstract class AbstractWrapper implements HGWDriverWrapper {
 	protected static final String FIELD_TEMP_CUR = "temp_cur";
 	protected static final String FIELD_WING_DIRECTION = "dir";
 
-	private static final Map<String, Integer> errorCodes = new HashMap<>();
+	protected static final Map<String, Integer> errorCodes = new HashMap<>();
+	protected static final Map<Integer, String> errorMessage = new HashMap<>();
 
 	static {
 		errorCodes.put("0", 0);
@@ -54,6 +55,23 @@ public abstract class AbstractWrapper implements HGWDriverWrapper {
 		errorCodes.put("132", Hgw2000.ERR_DEVICE_FAILURE);
 		errorCodes.put("133", Hgw2000.ERR_BUS_FAILURE);
 		errorCodes.put("134", Hgw2000.ERR_DEVICE_OFFLINE);
+		
+		errorMessage.put(0, "success");
+		errorMessage.put(Hgw2000.ERR_DEVICE_ACCESS_FAIL,"设备访问失败");
+		errorMessage.put(Hgw2000.ERR_DEVICE_STATUES_UNKNOWN, "状态未知");
+		errorMessage.put(Hgw2000.ERR_NEED_AUTHENTICATION, "需要重新验证");
+		errorMessage.put(Hgw2000.ERR_USER_AUTHENTICATION_FAIL, "用户验证失败");
+		errorMessage.put(Hgw2000.ERR_WRONG_DATA_FORMAT, "数据包格式错误");
+		errorMessage.put(Hgw2000.ERR_SEND_COMMAND_FAIL, "发送命令失败");
+		errorMessage.put(Hgw2000.ERR_WRONG_DEVICE_RETURN_VALUE, "设备返回值错误");
+		errorMessage.put(Hgw2000.ERR_CMD_TIME_OUT, "命令超时");
+		errorMessage.put(Hgw2000.ERR_CMD_PARSING, "命令解析错误");
+		errorMessage.put(Hgw2000.ERR_DEVICE_FAILURE, "设备故障");
+		errorMessage.put(Hgw2000.ERR_BUS_FAILURE, "总线出错");
+		errorMessage.put(Hgw2000.ERR_DEVICE_OFFLINE, "设备掉线");
+		errorMessage.put(Hgw2000.ERR_WRONG_RESPONSE_ERROR, "中控访问失败");
+
+		
 	}
 
 	@Override
@@ -170,5 +188,14 @@ public abstract class AbstractWrapper implements HGWDriverWrapper {
 			}
 			deviceStatus.setStatus(term, value);
 		}
+	}
+
+
+	protected String codeToMessage(int errorCode) {
+		String msg = errorMessage.get(errorCode);
+		if (msg == null){
+			return "未知错误";
+		}
+		return msg;
 	}
 }

@@ -1,6 +1,14 @@
 package org.skynet.bgby.driverproxy;
 
 public class DriverProxyConfiguration {
+	protected String appId;
+	
+	public String getAppId() {
+		return appId;
+	}
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
 	protected int connectionTimeout;
 	protected String multicastAddress;
 	protected int multicastPort;

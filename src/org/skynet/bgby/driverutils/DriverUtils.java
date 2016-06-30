@@ -18,7 +18,7 @@ public class DriverUtils {
 
 	public static final String MIME_TYPE_JSON = "application/json; charset=utf-8";
 	
-	private static ILogger logger;
+	protected static ILogger logger;
 
 	public static ILogger getLogger() {
 		return logger;
@@ -55,7 +55,7 @@ public class DriverUtils {
 		return msg;
 	}
 
-	private DriverUtils() {}
+	protected DriverUtils() {}
 
 	public static String getRequestFullUri(IRestRequest restRequest) {
 		String uri = restRequest.getRequestUri();
@@ -68,6 +68,10 @@ public class DriverUtils {
 
 	public static int getAsInt(Object obj, int defValue){
 		if (obj instanceof String){
+//			String valStr = (String) obj;
+//			if (((String) obj).equalsIgnoreCase("null")){
+//				return defValue;
+//			}
 			return Double.valueOf((String) obj).intValue();
 		}else if (obj instanceof Number){
 			return ((Number) obj).intValue();

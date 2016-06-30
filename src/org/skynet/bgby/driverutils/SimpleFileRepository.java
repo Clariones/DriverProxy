@@ -27,7 +27,9 @@ public abstract class SimpleFileRepository<T> {
 	protected String calcRelativeFileName(String id){
 		return id.replaceAll("[ \\-]", "_").replace('.', '/') + getFilePostfix();
 	}
-	protected abstract String convertToJsonStr(T data) throws IOException;
+	protected String convertToJsonStr(T data) throws IOException{
+		return gson.toJson(data);
+	}
 
 	public File getBaseFolder() {
 		return baseFolder;
@@ -99,7 +101,11 @@ public abstract class SimpleFileRepository<T> {
 	}
 	
 	public void setData(String key, T data) throws IOException {
-		this.cacheData(key, data);
+		cacheData(key, data);
+		saveData(key, data);
+
+	}
+	protected void saveData(String key, T data) throws IOException {
 		String jsonStr = convertToJsonStr(data);
 		String fileName = calcRelativeFileName(key);
 		File tgtFile = new File(getBaseFolder(), fileName);
@@ -138,7 +144,6 @@ public abstract class SimpleFileRepository<T> {
 				}
 			}
 		}
-
 	}
 	public void setDevelopingMode(boolean isDevelopingMode) {
 		this.isDevelopingMode = isDevelopingMode;

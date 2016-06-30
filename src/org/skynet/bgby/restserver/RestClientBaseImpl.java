@@ -164,7 +164,7 @@ public abstract class RestClientBaseImpl implements IRestClient {
 		Iterator<Entry<String, String>> it = sortedParams.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<String, String> kv = it.next();
-			sb.append('/').append(urlEncode(kv.getKey())).append('/').append(kv.getValue());
+			sb.append('/').append(urlEncode(kv.getKey())).append('/').append(urlEncode(kv.getValue()));
 		}
 		return sb.toString();
 	}
@@ -263,6 +263,7 @@ public abstract class RestClientBaseImpl implements IRestClient {
 		conn.setUseCaches(false); // ��ʹ�û���
 		conn.setRequestMethod("GET"); // ʹ��get����
 		conn.setConnectTimeout(getConnectionTimeout());
+		conn.setRequestProperty("Content-Length", "0");
 		conn.setReadTimeout(getReadTimeout());
 		IHttpResponse response = sendRequestAndWaitResponse(conn);
 		return response;

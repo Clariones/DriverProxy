@@ -2,7 +2,7 @@
 	ID: "AC-3",
 	profile: "Honeywell HDW 2000 HVAC",
 	identity: {
-		"ipAddress":"192.168.0.40",
+		"ipAddress":"127.0.0.1",
 		"id" : 103
 	},
 	extParams: {

@@ -3,7 +3,9 @@ package org.skynet.bgby.driverproxy;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.skynet.bgby.command.management.BaseManageCmd;
@@ -23,11 +25,15 @@ import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.devicestatus.DeviceStatusManager;
 import org.skynet.bgby.driverutils.DriverUtils;
 import org.skynet.bgby.layout.LayoutManager;
+import org.skynet.bgby.listeningserver.IUdpMessageHandler;
 import org.skynet.bgby.listeningserver.ListeningServerException;
+import org.skynet.bgby.listeningserver.MessageService.UdpMessageHandlingContext;
 import org.skynet.bgby.protocol.IHttpResponse;
 import org.skynet.bgby.protocol.IRestRequest;
 import org.skynet.bgby.protocol.IRestResponse;
 import org.skynet.bgby.protocol.RestRequestCodec;
+import org.skynet.bgby.protocol.UdpMessage;
+import org.skynet.bgby.protocol.UdpMessageCodec;
 import org.skynet.bgby.restserver.IRestRequestHandler;
 import org.skynet.bgby.restserver.RestService;
 
@@ -38,14 +44,6 @@ import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
 
 public class DriverProxyService {
-	protected static final Map<String, DeviceStandard> deviceStandards = new HashMap<>();
-
-	static {
-		deviceStandards.put(NormalHVAC.ID, new NormalHVAC());
-		deviceStandards.put(SimpleLight.ID, new SimpleLight());
-		deviceStandards.put(SimpleDimmer.ID, new SimpleDimmer());
-	}
-
 	class DeviceDriverCommandHandler implements IRestRequestHandler {
 
 		@Override
@@ -72,13 +70,34 @@ public class DriverProxyService {
 		}
 	}
 
+	class MulticastMsgHandler implements IUdpMessageHandler{
+
+		@Override
+		public void handleMessage(UdpMessageHandlingContext context) {
+			context.setServed(true); // All messages for driver proxy be served here.
+			UdpMessage responseUdpMessage = handleUdpMessage(context.getInputMessage());
+			context.setResponseMessage(responseUdpMessage);
+		}
+		
+	}
+
+	protected static final Map<String, DeviceStandard> deviceStandards = new HashMap<>();
+
 	protected static final String TAG = "DriverProxyService";
-	protected Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	static {
+		deviceStandards.put(NormalHVAC.ID, new NormalHVAC());
+		deviceStandards.put(SimpleLight.ID, new SimpleLight());
+		deviceStandards.put(SimpleDimmer.ID, new SimpleDimmer());
+	}
 	protected DriverProxyConfiguration config;
+	protected DeviceDriverCommandHandler deviceCommandHandler;
 	protected DeviceConfigManager deviceConfigManager;
 	protected DeviceProfileManager deviceProfileManager;
 	protected DeviceStatusManager deviceStatusManager;
+
 	protected DriverManager driverManager;
+
+	protected Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	protected LayoutManager layoutManager;
 
@@ -91,11 +110,9 @@ public class DriverProxyService {
 	protected CmdRestMngHandler restMngCmdHandler;
 
 	protected RestService restService;
-
 	protected boolean started = false;
 
 	protected int steps;
-	private DeviceDriverCommandHandler deviceCommandHandler;
 
 	public boolean canHandleRequest(IRestRequest restRequest) {
 		if (!started) {
@@ -117,6 +134,23 @@ public class DriverProxyService {
 		}
 //		return standard.isSupportCommand(command);
 		return true;
+	}
+
+	private UdpMessage createDeviceStatusMsgData(DeviceStatus device) {
+		UdpMessage message = new UdpMessage();
+		message.setCommand(UdpMessage.CMD_DEVICE_STATUS_REPORT);
+		message.setFromApp(this.getConfig().getAppId());
+		message.setFromDevice(device.getID());
+		Map<String, String> params = new HashMap<>();
+		Iterator<Entry<String, Object>> it = device.getStatus().entrySet().iterator();
+		while(it.hasNext()){
+			Entry<String, Object> ent = it.next();
+			String key = UdpMessage.FIELD_DEVICE_STATUES_PREFIX+ent.getKey();
+			String value = String.valueOf(ent.getValue());
+			params.put(key, value);
+		}
+		message.setParams(params);
+		return message;
 	}
 
 	public DriverProxyConfiguration getConfig() {
@@ -163,7 +197,6 @@ public class DriverProxyService {
 				deviceStatus.setID(devId);
 			}
 			deviceStatus.setProfile(devCfg.getProfile());
-			deviceStatus.setIdentify(devCfg.getIdentity());
 			// second, find correct dirver for this device
 			DeviceDriver driver = getDriverManager().lookupDriverForDevice(devId, deviceStatus, devCfg);
 			if (driver == null){
@@ -208,6 +241,14 @@ public class DriverProxyService {
 
 	}
 
+	public UdpMessage handleUdpMessage(UdpMessage inputMessage) {
+		if (getConfig().getAppId().equals(inputMessage.getFromApp())){
+			DriverUtils.log(Level.FINE, TAG, "Receive self message, ignore");
+			return null;
+		}
+		return null;
+	}
+
 	protected void initDeviceCommandHandlers() {
 		this.deviceCommandHandler = new DeviceDriverCommandHandler();
 		this.restService.registerCommandHandler(deviceCommandHandler);
@@ -226,6 +267,11 @@ public class DriverProxyService {
 	protected void initRestCommandHandlers() {
 		initManagementCommandHandlers();
 		initDeviceCommandHandlers();
+	}
+
+	public void multicastDeviceStatus(DeviceStatus deviceStatus) {
+		UdpMessage data = createDeviceStatusMsgData(deviceStatus);
+		this.multicastHandler.sendMessage(data);
 	}
 
 	protected void registerMngCmdHandler(BaseManageCmd cmdHandler) {
@@ -283,7 +329,7 @@ public class DriverProxyService {
 	public void setReporter(DPStatusReporter reporter) {
 		this.reporter = reporter;
 	}
-
+	
 	public void start() {
 		DriverUtils.log(Level.INFO, TAG, "Starting...");
 		this.steps = 1;
@@ -307,7 +353,9 @@ public class DriverProxyService {
 		multicastHandler = new DriverProxyMulticastListener();
 		multicastHandler.setListeningAddress(config.getMulticastAddress());
 		multicastHandler.setListeningPort(config.getMulticastPort());
+		multicastHandler.setCodec(new UdpMessageCodec());
 		multicastHandler.setDamon(false);
+		multicastHandler.registerHandler(new MulticastMsgHandler());
 		reportStartStatus(steps++, "Multicast message handler initialed");
 
 		// start all these services
@@ -338,14 +386,17 @@ public class DriverProxyService {
 			ModuleStartingReporter mRept = new ModuleStartingReporter();
 
 			deviceProfileManager.setStartingReporter(mRept);
+			deviceProfileManager.setDriverProxy(this);
 			deviceProfileManager.start();
 			reportStartStatus(steps++, "Device profile manager started");
 
 			deviceStatusManager.setStartingReporter(mRept);
+			deviceStatusManager.setDriverProxy(this);
 			deviceStatusManager.start();
 			reportStartStatus(steps++, "Driver status manager started");
 
 			deviceConfigManager.setStartingReporter(mRept);
+			deviceConfigManager.setDriverProxy(this);
 			deviceConfigManager.start();
 			reportStartStatus(steps++, "Device config manager started");
 
@@ -353,10 +404,12 @@ public class DriverProxyService {
 			driverManager.setDeviceStatusManager(deviceStatusManager);
 			driverManager.setDeviceProfileManager(deviceProfileManager);
 			driverManager.setDeviceConfigManager(deviceConfigManager);
+			driverManager.setDriverProxy(this);
 			driverManager.start();
 			reportStartStatus(steps++, "Driver manager started");
 
 			layoutManager.setStartingReporter(mRept);
+			layoutManager.setDriverProxy(this);
 			layoutManager.start();
 			reportStartStatus(steps++, "Layout manager started");
 

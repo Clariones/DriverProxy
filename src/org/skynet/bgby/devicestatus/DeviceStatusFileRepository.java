@@ -34,9 +34,18 @@ public class DeviceStatusFileRepository extends SimpleFileRepository<DeviceStatu
 
 	@Override
 	public void updateDeviceStatus(DeviceStatus data) throws IOException {
-		this.setData(data.getID(), data);
+		DeviceStatus mineData = getDataByID(data.getID());
+		if (mineData == data){
+			saveData(data.getID(), data);
+			return;
+		}
+		if (mineData == null){
+			this.setData(data.getID(), data);
+			return;
+		}
+		mineData.getStatus().putAll(data.getStatus());
+		saveData(data.getID(), mineData);
 	}
-	
-	
+
 
 }

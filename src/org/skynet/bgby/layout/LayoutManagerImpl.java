@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.skynet.bgby.driverproxy.DPModuleException;
 import org.skynet.bgby.driverproxy.DPModuleStatusReporter;
+import org.skynet.bgby.driverproxy.DriverProxyService;
 
 public class LayoutManagerImpl implements LayoutManager {
-	private static final String TAG = LayoutManagerImpl.class.getName();
+	protected static final String TAG = LayoutManagerImpl.class.getName();
 	protected DPModuleStatusReporter startingReporter;
 	protected LayoutRepository repository;
+	protected DriverProxyService proxy;
 
 	@Override
 	public List<ILayout> getControllerLayout(String controllerID) {
@@ -34,6 +36,11 @@ public class LayoutManagerImpl implements LayoutManager {
 	@Override
 	public void setStartingReporter(DPModuleStatusReporter reporter) {
 		startingReporter = reporter;
+	}
+
+	@Override
+	public void setDriverProxy(DriverProxyService proxy) {
+		this.proxy = proxy;
 	}
 
 }

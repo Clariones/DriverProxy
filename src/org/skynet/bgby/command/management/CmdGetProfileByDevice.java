@@ -18,7 +18,7 @@ import org.skynet.bgby.restserver.IRestCommandHandler;
 
 public class CmdGetProfileByDevice extends BaseManageCmd implements IRestCommandHandler{
 	public static final String CMD = "getDeviceProfiles";
-	private static final int ERROR_CODE_BASE = 10000;
+	protected static final int ERROR_CODE_BASE = 10000;
 	
 	@Override
 	public IRestResponse handleCommand(IRestRequest restRequest) {
@@ -55,20 +55,20 @@ public class CmdGetProfileByDevice extends BaseManageCmd implements IRestCommand
 		return response;
 	}
 
-	private IRestResponse newErrorResponse(int i, String string) {
+	protected IRestResponse newErrorResponse(int i, String string) {
 		RestResponseImpl response = new RestResponseImpl();
 		response.setErrorCode(ERROR_CODE_BASE + i);
 		response.setResult(string);
 		return response;
 	}
 
-	private void findAllDeviceIds(List<ILayout> tgtLayout, Set<String> deviceIds) {
+	protected void findAllDeviceIds(List<ILayout> tgtLayout, Set<String> deviceIds) {
 		for(ILayout layout: tgtLayout){
 			findDevicesInOneLayout(layout, deviceIds);
 		}
 	}
 
-	private void findDevicesInOneLayout(ILayout layout, Set<String> deviceIds) {
+	protected void findDevicesInOneLayout(ILayout layout, Set<String> deviceIds) {
 		Map<String, Object> params = layout.getParams();
 		if (params != null){
 			String theId = (String) params.get(LayoutUtils.PARAM_DEVICE_ID);

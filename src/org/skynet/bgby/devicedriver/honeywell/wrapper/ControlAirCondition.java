@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.skynet.bgby.deviceconfig.DeviceConfigData;
 import org.skynet.bgby.devicedriver.honeywell.ExecutionResult;
 import org.skynet.bgby.devicedriver.honeywell.HGW2000Controller;
 import org.skynet.bgby.devicedriver.honeywell.Hgw2000;
@@ -23,13 +24,15 @@ public class ControlAirCondition extends AbstractWrapper {
 	protected static final String[] cmdFormat = { FIELD_TOKEN, FIELD_CMD, FIELD_DEVICE, FIELD_ID, FIELD_ON_OFF,
 			FIELD_MODE, FIELD_FAN, FIELD_WING_DIRECTION, FIELD_TEMP_SET, FIELD_TEMP_CUR, FIELD_ERR };
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void updateStatus(ExecutionContext executionContext, IRestResponse response) {
 		if (response.getErrorCode() != 0) {
 			DriverUtils.log(Level.FINE, Hgw2000.TAG, "Response not success, do not update status");
 			return;
 		}
-		updateStatus(executionContext.getDevice(), (Map<String, Object>) response.getData(), NormalHVAC.TERM_FAN_MODE,
+		updateStatus(executionContext.getDevice(), 
+				(Map<String, Object>) response.getData(), NormalHVAC.TERM_FAN_MODE,
 				NormalHVAC.TERM_SET_TEMPERATURE, NormalHVAC.TERM_ROOM_TEMPERATURE, NormalHVAC.TERM_RUNNING_MODE);
 	}
 
@@ -69,6 +72,7 @@ public class ControlAirCondition extends AbstractWrapper {
 		RestResponseImpl response = new RestResponseImpl();
 		Map<String, Object> responseData = new HashMap<>();
 		response.setErrorCode(toApiErrorCode(data.get(FIELD_ERR)));
+		response.setResult(codeToMessage(response.getErrorCode()));
 
 		updateInt(responseData, data, NormalHVAC.TERM_SET_TEMPERATURE, FIELD_TEMP_SET);
 		updateInt(responseData, data, NormalHVAC.TERM_ROOM_TEMPERATURE, FIELD_TEMP_CUR);
@@ -98,7 +102,8 @@ public class ControlAirCondition extends AbstractWrapper {
 	protected Object createArgsFromStatus(ExecutionContext ctx) {
 		AirConditionArgs arg = new AirConditionArgs();
 		DeviceStatus status = ctx.getDevice();
-		arg.id = DriverUtils.getAsInt(status.getIdentify().get(Hgw2000.IDENTIFIER_ID), -1);
+		DeviceConfigData cfgData = ctx.getConfig();
+		arg.id = DriverUtils.getAsInt(cfgData.getIdentity().get(Hgw2000.IDENTIFIER_ID), -1);
 		assert(arg.id != -1);
 		if (status.getStatus() == null) {
 			arg.onOrOff = 0;

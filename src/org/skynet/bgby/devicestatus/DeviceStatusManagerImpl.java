@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.skynet.bgby.driverproxy.DPModuleException;
 import org.skynet.bgby.driverproxy.DPModuleStatusReporter;
+import org.skynet.bgby.driverproxy.DriverProxyService;
 
 public class DeviceStatusManagerImpl implements DeviceStatusManager {
 	protected DPModuleStatusReporter startingReporter;
 	protected DeviceStatusRepository repository;
+	protected DriverProxyService proxy;
 
 
 	@Override
@@ -42,6 +44,12 @@ public class DeviceStatusManagerImpl implements DeviceStatusManager {
 	@Override
 	public void updateDevice(DeviceStatus deviceStatus) throws IOException {
 		repository.updateDeviceStatus(deviceStatus);
+		proxy.multicastDeviceStatus(deviceStatus);
+	}
+
+	@Override
+	public void setDriverProxy(DriverProxyService proxy) {
+		this.proxy=proxy;
 	}
 
 }

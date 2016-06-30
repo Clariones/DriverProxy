@@ -10,6 +10,7 @@ public class UdpMessage {
 	public static final String FIELD_FROM_APP = "X_APP";
 	public static final String FIELD_DEVICE = "X_DEV";
 	public static final String FIELD_TO = "X_TO";
+	public static final String FIELD_DEVICE_STATUES_PREFIX = "DEV_STATUES_";
 	
 	public static final String CMD_UPDATE_CONFIG = "update_configration";
 	public static final String CMD_DEVICE_ONLINE = "device_online";

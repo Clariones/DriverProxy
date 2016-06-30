@@ -7,7 +7,7 @@ public class DriverModuleException extends DPModuleException {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -66820367212789247L;
+	protected static final long serialVersionUID = -66820367212789247L;
 
 	public DriverModuleException() {
 	}

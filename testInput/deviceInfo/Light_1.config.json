@@ -2,9 +2,9 @@
 	ID: "Light-1",
 	profile: "Honeywell HBus Light",
 	identity: {
-		"ipAddress":"192.168.2.103",
+		"ipAddress":"127.0.0.1",
 		"area": 1,
-		"id" : 1
+		"loop" : 1
 	},
 	extParams: {
 		userName: "admin",

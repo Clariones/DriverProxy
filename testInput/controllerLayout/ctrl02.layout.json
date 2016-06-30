@@ -31,6 +31,46 @@
             hasRows: 1,
             hasCols: 1
           }
+        },
+        {
+          type: "simpleLight",
+          params : {
+            deviceID: "Light-1",
+            atRow: 1,
+            atCol: 3,
+            hasRows: 1,
+            hasCols: 1
+          }
+        },
+        {
+          type: "simpleLight",
+          params : {
+            deviceID: "Light-1",
+            atRow: 2,
+            atCol: 1,
+            hasRows: 1,
+            hasCols: 1
+          }
+        },
+        {
+          type: "simpleLight",
+          params : {
+            deviceID: "Light-1",
+            atRow: 2,
+            atCol: 2,
+            hasRows: 1,
+            hasCols: 1
+          }
+        },
+        {
+          type: "simpleLight",
+          params : {
+            deviceID: "Light-1",
+            atRow: 2,
+            atCol: 3,
+            hasRows: 1,
+            hasCols: 1
+          }
         }
       ]
     }]

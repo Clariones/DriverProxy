@@ -2,7 +2,7 @@ package org.skynet.bgby.devicedriver;
 
 public class DeviceDriverException extends Exception {
 
-	private static final long serialVersionUID = 3411097451157831451L;
+	protected static final long serialVersionUID = 3411097451157831451L;
 
 	public DeviceDriverException() {
 	}

@@ -42,7 +42,7 @@ public class DeviceDriverManagerPCImpl extends DriverManagerImpl {
 		}
 	}
 
-	private void loadDriver(File file) {
+	protected void loadDriver(File file) {
 		FileReader reader = null;
 		Gson gson = new Gson();
 		try {
@@ -67,13 +67,13 @@ public class DeviceDriverManagerPCImpl extends DriverManagerImpl {
 		}
 	}
 
-	private List<File> findAllDriverRegisterFiles() {
+	protected List<File> findAllDriverRegisterFiles() {
 		List<File> files = new ArrayList<>();
 		addFilesFromFolder(files, getBaseFolder());
 		return files;
 	}
 
-	private void addFilesFromFolder(List<File> files, File folder) {
+	protected void addFilesFromFolder(List<File> files, File folder) {
 		File[] curFiles = folder.listFiles();
 		for (File file : curFiles) {
 			if (file.isDirectory()) {

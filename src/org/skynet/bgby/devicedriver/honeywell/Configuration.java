@@ -2,10 +2,10 @@ package org.skynet.bgby.devicedriver.honeywell;
 
 public class Configuration {
 
-	private String username="admin";
-	private String password="123456";
-	private String hostIPAddress="192.168.0.40";
-	private int port=10099;
+	protected String username="admin";
+	protected String password="123456";
+	protected String hostIPAddress="192.168.0.40";
+	protected int port=10099;
 	public String getUsername() {
 		return username;
 	}

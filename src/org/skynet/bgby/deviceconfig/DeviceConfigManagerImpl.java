@@ -2,13 +2,25 @@ package org.skynet.bgby.deviceconfig;
 
 import org.skynet.bgby.driverproxy.DPModuleException;
 import org.skynet.bgby.driverproxy.DPModuleStatusReporter;
+import org.skynet.bgby.driverproxy.DriverProxyService;
 
 public class DeviceConfigManagerImpl implements DeviceConfigManager {
-	protected DPModuleStatusReporter startingReporter;
+	protected DriverProxyService proxy;
 	protected DeviceConfigRepository repository;
+	protected DPModuleStatusReporter startingReporter;
 	
+	@Override
+	public DeviceConfigData getDeviceConfigData(String devId) {
+		return repository.getConfigData(devId);
+	}
+
 	public DeviceConfigRepository getRepository() {
 		return repository;
+	}
+
+	@Override
+	public void setDriverProxy(DriverProxyService proxy) {
+		this.proxy = proxy;
 	}
 
 	public void setRepository(DeviceConfigRepository repository) {
@@ -16,8 +28,8 @@ public class DeviceConfigManagerImpl implements DeviceConfigManager {
 	}
 
 	@Override
-	public DeviceConfigData getDeviceConfigData(String devId) {
-		return repository.getConfigData(devId);
+	public void setStartingReporter(DPModuleStatusReporter reporter) {
+		startingReporter = reporter;
 	}
 
 	@Override
@@ -28,11 +40,6 @@ public class DeviceConfigManagerImpl implements DeviceConfigManager {
 	@Override
 	public void stop() {
 		// so far nothing to do when stop
-	}
-
-	@Override
-	public void setStartingReporter(DPModuleStatusReporter reporter) {
-		startingReporter = reporter;
 	}
 
 }

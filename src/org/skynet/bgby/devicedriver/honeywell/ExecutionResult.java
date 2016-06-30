@@ -1,11 +1,11 @@
 package org.skynet.bgby.devicedriver.honeywell;
 
 public class ExecutionResult {
-	private String webCommand;
-	private String sentCommand;
-	private String receivedResponse;
-	private String webResult;
-	private long exectionTime=0;
+	protected String webCommand;
+	protected String sentCommand;
+	protected String receivedResponse;
+	protected String webResult;
+	protected long exectionTime=0;
 	public String getWebCommand() {
 		return webCommand;
 	}
@@ -77,7 +77,7 @@ result:  控制结果，1 为成功，其他值为失败*/
 		// TODO Auto-generated method stub
 		return errorCodeOrResult;
 	}
-	private boolean isSystemResponse(String receivedResponse) {
+	protected boolean isSystemResponse(String receivedResponse) {
 		// TODO Auto-generated method stub
 		/*token$ack,scenario,sid,result\n
 		命令各项参数意义如下：

@@ -2,7 +2,7 @@ package org.skynet.bgby.driverproxy;
 
 public class DPModuleException extends Exception {
 
-	private static final long serialVersionUID = -4629305001333591911L;
+	protected static final long serialVersionUID = -4629305001333591911L;
 
 	public DPModuleException() {
 		super();

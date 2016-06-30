@@ -23,7 +23,7 @@ import org.skynet.bgby.driverutils.DriverUtils;
 import org.skynet.bgby.protocol.IRestResponse;
 
 public class Helper {
-	private static class CmdProfileHandler {
+	protected static class CmdProfileHandler {
 		public CmdProfileHandler(String command2, HGWDriverWrapper wrapper2) {
 			command = command2;
 			wrapper = wrapper2;
@@ -32,11 +32,11 @@ public class Helper {
 		HGWDriverWrapper wrapper;
 	}
 
-	private static final Map<String, HgwCmdHandler> cmdHandlers = new HashMap<>();
+	protected static final Map<String, HgwCmdHandler> cmdHandlers = new HashMap<>();
 	public static final Set<String> SUPPORTED_PROFILES = new HashSet<>();
 	public static final Map<String, Map<String, HGWDriverWrapper>> HANDLERS_BY_PRODILE = new HashMap<>();
 
-	private static void as_profile(Profile profile, CmdProfileHandler... handlers) {
+	protected static void as_profile(Profile profile, CmdProfileHandler... handlers) {
 		SUPPORTED_PROFILES.add(profile.name);
 		if (handlers == null || handlers.length == 0){
 			return;
@@ -78,7 +78,7 @@ public class Helper {
 				handle(NormalHVAC.CMD_SET_TEMPERATURE, new ControlAirCondition()));
 	}
 
-	private Helper() {
+	protected Helper() {
 	}
 
 

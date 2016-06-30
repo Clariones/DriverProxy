@@ -23,7 +23,7 @@ public class HttpResponseImpl implements IHttpResponse {
 
 	protected IStatus status = Status.OK;
 	protected String strData;
-	private void closeInputStream() {
+	protected void closeInputStream() {
 		if (inputStream != null) {
 			try {
 				inputStream.close();

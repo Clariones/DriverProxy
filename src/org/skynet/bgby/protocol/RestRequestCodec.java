@@ -10,7 +10,7 @@ import fi.iki.elonen.NanoHTTPD.IHTTPSession;
 
 public class RestRequestCodec {
 
-	private static final String TAG = RestRequestCodec.class.getName();
+	protected static final String TAG = RestRequestCodec.class.getName();
 
 	public IRestRequest getRequest(IHTTPSession session) {
 		String uri = session.getUri();

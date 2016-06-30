@@ -5,7 +5,7 @@ public class ListeningServerException extends Exception {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8147455868745651145L;
+	protected static final long serialVersionUID = -8147455868745651145L;
 
 	public ListeningServerException() {
 		super();

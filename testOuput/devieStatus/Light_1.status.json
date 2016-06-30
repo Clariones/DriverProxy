@@ -2,12 +2,7 @@
   "ID": "Light-1",
   "profile": "Honeywell HBus Light",
   "status": {
-    "state": "on",
-    "dimmer": 100
-  },
-  "identify": {
-    "ipAddress": "192.168.2.103",
-    "area": 1.0,
-    "id": 1.0
+    "state": "off",
+    "dimmer": 0
   }
 }

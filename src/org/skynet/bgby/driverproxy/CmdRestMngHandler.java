@@ -19,7 +19,7 @@ import com.google.gson.GsonBuilder;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
 
 public class CmdRestMngHandler implements IRestRequestHandler {
-	private static final String TAG = "RestManagementCommandHandler";
+	protected static final String TAG = "RestManagementCommandHandler";
 	protected Map<String, BaseManageCmd> handlers;
 	protected Gson gson;
 
@@ -41,12 +41,12 @@ public class CmdRestMngHandler implements IRestRequestHandler {
 		return true;
 	}
 
-	private String toJson(IRestResponse result) {
+	protected String toJson(IRestResponse result) {
 		Gson gson = getGson();
 		return gson.toJson(result);
 	}
 
-	private Gson getGson() {
+	protected Gson getGson() {
 		if (gson != null){
 			return gson;
 		}
@@ -54,7 +54,7 @@ public class CmdRestMngHandler implements IRestRequestHandler {
 		return gson;
 	}
 
-	private void handleHelpCommand(IRestRequest restRequest, IHttpResponse restResponse) {
+	protected void handleHelpCommand(IRestRequest restRequest, IHttpResponse restResponse) {
 		StringBuilder sb = new StringBuilder();
 		Iterator<BaseManageCmd> it = handlers.values().iterator();
 		while(it.hasNext()){

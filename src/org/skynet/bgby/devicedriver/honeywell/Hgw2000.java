@@ -83,6 +83,7 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 
 	public static final String IDENTIFIER_AREA = "area";
 	public static final String IDENTIFIER_ID = "id";
+	public static final String IDENTIFIER_LOOP = "loop";
 	public static final String IDENTIFIER_IPADDRESS = "ipAddress";
 	public static final String TAG = Hgw2000.class.getName();
 
@@ -109,7 +110,7 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 		return driverConfig;
 	}
 
-	private HGW2000Controller getDriver(DeviceConfigData config) throws DeviceDriverException {
+	protected HGW2000Controller getDriver(DeviceConfigData config) throws DeviceDriverException {
 		String idfyIP = (String) config.getIdentity().get(IDENTIFIER_IPADDRESS);
 		if (idfyIP == null) {
 			throw new DeviceDriverException("Some HGW2000 device configuration has no ipAddress");
@@ -131,7 +132,7 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 		return driver;
 	}
 
-	private Configuration createControllerConfig(String ipAddress, DeviceConfigData config) {
+	protected Configuration createControllerConfig(String ipAddress, DeviceConfigData config) {
 		String userName = (String) config.getExtParam("userName");
 		String password = (String) config.getExtParam("password");
 		int port = DriverUtils.getAsInt(config.getExtParam("port"), -2);

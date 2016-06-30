@@ -1,4 +1,5 @@
 {
+	appId:"proxy01",
     connectionTimeout:30000,
     multicastAddress:"224.0.0.4",
     multicastPort:8982,

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.skynet.bgby.deviceconfig.DeviceConfigData;
 import org.skynet.bgby.devicedriver.honeywell.ExecutionResult;
 import org.skynet.bgby.devicedriver.honeywell.HGW2000Controller;
 import org.skynet.bgby.devicedriver.honeywell.Hgw2000;
@@ -36,6 +37,7 @@ public class ControlHbusLight extends AbstractWrapper {
 		RestResponseImpl response = new RestResponseImpl();
 		Map<String, Object> responseData = new HashMap<>();
 		response.setErrorCode(toApiErrorCode(data.get(FIELD_ERR)));
+		response.setResult(codeToMessage(response.getErrorCode()));
 
 		String val = data.get(FIELD_ON_OFF);
 		if (val != null) {
@@ -105,11 +107,12 @@ public class ControlHbusLight extends AbstractWrapper {
 	protected Object createArgsFromStatus(ExecutionContext ctx) {
 		HBusLightArgs args = new HBusLightArgs();
 		DeviceStatus status = ctx.getDevice();
-		args.loop = DriverUtils.getAsInt(status.getIdentify().get(Hgw2000.IDENTIFIER_ID), -1);
-		args.area = DriverUtils.getAsInt(status.getIdentify().get(Hgw2000.IDENTIFIER_AREA), -1);
+		DeviceConfigData cfgData = ctx.getConfig();
+		args.loop = DriverUtils.getAsInt(cfgData.getIdentity().get(Hgw2000.IDENTIFIER_LOOP), -1);
+		args.area = DriverUtils.getAsInt(cfgData.getIdentity().get(Hgw2000.IDENTIFIER_AREA), -1);
 		
 		if (args.loop <= 0 || args.area <= 0) {
-			throw new RuntimeException(status.getID() + " profile loop and area not correct:" + status.getIdentify());
+			throw new RuntimeException(status.getID() + " profile loop and area not correct:" + cfgData.getIdentity());
 		}
 		if (status.getStatus() == null) {
 			return args;
