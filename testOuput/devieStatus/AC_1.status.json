@@ -2,9 +2,9 @@
   "ID": "AC-1",
   "profile": "Honeywell HDW 2000 HVAC",
   "status": {
-    "temperatureSetting": 27,
-    "runningMode": "除湿",
-    "roomTemperature": 29,
+    "temperatureSetting": 26,
+    "runningMode": "风",
+    "roomTemperature": 22,
     "fanMode": "自动"
   }
 }

@@ -1,0 +1,9 @@
+{
+  "ID": "UFH-1",
+  "profile": "Honeywell Floor Heating",
+  "status": {
+    "temperatureSetting": 27.0,
+    "state": false,
+    "roomTemperature": 24.0
+  }
+}

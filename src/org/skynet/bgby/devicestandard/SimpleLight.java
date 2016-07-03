@@ -11,17 +11,16 @@ public class SimpleLight extends DeviceStandardBaseImpl {
 	public static final String CMD_GET_LIGHT = "getLight";
 	public static final String CMD_TOGGLE_LIGHT = "toggleLight";
 	
-	public static final int ERR_LIGHT_START_CODE = 77000;
 	public static final int ERR_UNSUPPORTED_ACTION = ERR_LIGHT_START_CODE + 1;
 	public static final int ERR_MISS_LIGHT_STATUES = ERR_LIGHT_START_CODE + 2;
 
 	public SimpleLight() {
+		super();
 		id = ID;
 		
 		TERM(TERM_DISPLAY_NAME);
 		TERM(TERM_LIGHT_STATUES);
 		TERM(TERM_CAN_TOGGLE);
-		TERM(DeviceStandardBaseImpl.TERM_CAN_QUERY);
 		
 		CMD(CMD_SET_LIGHT);
 		CMD(CMD_GET_LIGHT);

@@ -1,0 +1,8 @@
+{
+  "ID": "Light-2",
+  "profile": "Honeywell HBus Light",
+  "status": {
+    "state": "on",
+    "dimmer": 100
+  }
+}

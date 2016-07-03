@@ -14,6 +14,11 @@ public abstract class DeviceStandardBaseImpl implements DeviceStandard {
 	public static final String CMD_SET_ALL = "setAll";
 	
 	public static final int ERR_DEVICE_COMMON_START_CODE = 75000;
+	public static final int ERR_HVAC_START_CODE = 76000;
+	public static final int ERR_LIGHT_START_CODE = 77000;
+	public static final int ERR_FLOORHEATING_START_CODE = 78000;
+
+	
 	public static final int ERR_UNSUPPORTED_COMMAND = ERR_DEVICE_COMMON_START_CODE + 1;
 	public static final int ERR_IO_EXCEPTION = ERR_DEVICE_COMMON_START_CODE + 2;
 	public static final int ERR_WRONG_PROFILE = ERR_DEVICE_COMMON_START_CODE + 3;
@@ -24,6 +29,13 @@ public abstract class DeviceStandardBaseImpl implements DeviceStandard {
 	protected Set<String> commands;
 	protected String id;
 	
+	public DeviceStandardBaseImpl(){
+		TERM(TERM_CAN_QUERY);
+		TERM(TERM_DISPLAY_NAME);
+		
+		CMD(CMD_GET_ALL);
+		CMD(CMD_SET_ALL);
+	}
 	
 	@Override
 	public Set<String> getTerms() {

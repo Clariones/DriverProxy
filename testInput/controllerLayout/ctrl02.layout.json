@@ -43,7 +43,7 @@
           }
         },
         {
-          type: "simpleLight",
+          type: "simpleDimmer",
           params : {
             deviceID: "Light-1",
             atRow: 2,
@@ -53,9 +53,9 @@
           }
         },
         {
-          type: "simpleLight",
+          type: "simpleDimmer",
           params : {
-            deviceID: "Light-1",
+            deviceID: "Light-2",
             atRow: 2,
             atCol: 2,
             hasRows: 1,
@@ -88,13 +88,14 @@
         "layoutDirection": "portrait"
       },
       layoutContent: [
+      	
         {
           type: "normalHVAC",
           params : {
             deviceID: "AC-3",
-            atRow: 1,
+            atRow: 2,
             atCol: 1,
-            hasRows: 2,
+            hasRows: 1,
             hasCols: 1
           }
         },

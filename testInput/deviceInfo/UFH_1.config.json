@@ -1,0 +1,12 @@
+{
+	ID: "UFH-1",
+	profile: "Honeywell Floor Heating",
+	identity: {
+		"ipAddress":"127.0.0.1",
+		"id": 10
+	},
+	extParams: {
+		userName: "admin",
+		password: "123456"
+	}
+}
