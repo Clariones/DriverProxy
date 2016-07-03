@@ -3,6 +3,6 @@
   "profile": "Honeywell.HGW2000.Maia_II_HBus_Light",
   "status": {
     "state": "on",
-    "dimmer": 21
+    "dimmer": 100
   }
 }

@@ -2,7 +2,7 @@
   "ID": "AC-1",
   "profile": "Honeywell.HGW2000.485HVAC",
   "status": {
-    "temperatureSetting": 25,
+    "temperatureSetting": 33,
     "runningMode": "风",
     "roomTemperature": 22,
     "fanMode": "自动"
