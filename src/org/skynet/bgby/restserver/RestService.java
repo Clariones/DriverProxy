@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -53,6 +54,7 @@ public class RestService extends NanoHTTPD {
 
 	@Override
 	public Response serve(IHTTPSession session) {
+		System.out.println(new Date() + "========================start serve========================");
 		IRestRequest request = getProtocolHandler().getRequest(session);
 		if (request == null) {
 			return responseInvalidRestRequest(session);

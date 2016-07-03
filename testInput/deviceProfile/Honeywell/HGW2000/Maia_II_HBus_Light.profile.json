@@ -1,9 +1,9 @@
 {
-	ID: "Honeywell HBus Light",
+	ID: "Honeywell.HGW2000.Maia_II_HBus_Light",
 	standard: "Light.Dimmer",
 	identifiers: ["ipAddress","area", "loop"],
 	spec: {
-		canDoToggle: "yes",
+		canDoToggle: "no",
 		canQueryStatus: "yes"
 	}
 }

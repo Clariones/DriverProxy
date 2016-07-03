@@ -1,6 +1,6 @@
 {
   "ID": "UFH-1",
-  "profile": "Honeywell Floor Heating",
+  "profile": "Honeywell.HGW2000.UFH",
   "status": {
     "temperatureSetting": 27.0,
     "state": false,

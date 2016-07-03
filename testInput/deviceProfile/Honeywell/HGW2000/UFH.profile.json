@@ -1,5 +1,5 @@
 {
-	ID: "Honeywell Floor Heating",
+	ID: "Honeywell.HGW2000.UFH",
 	standard: "FloorHeating.Normal",
 	identifiers: ["ipAddress","id"],
 	spec: {

@@ -1,5 +1,5 @@
 {
-	ID: "Honeywell HDW 2000 HVAC",
+	ID: "Honeywell.HGW2000.485HVAC",
 	standard: "HVAC.Normal",
 	identifiers: ["ipAddress","id"],
 	spec: {

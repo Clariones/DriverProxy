@@ -185,9 +185,13 @@ public abstract class NanoHTTPD {
         public void run() {
             OutputStream outputStream = null;
             try {
+            	System.out.println(new Date() + "========================before getOutputStream========================");
                 outputStream = this.acceptSocket.getOutputStream();
+                System.out.println(new Date() + "========================after getOutputStream========================");
                 TempFileManager tempFileManager = NanoHTTPD.this.tempFileManagerFactory.create();
+                System.out.println(new Date() + "========================after create temp file========================");
                 HTTPSession session = new HTTPSession(tempFileManager, this.inputStream, outputStream, this.acceptSocket.getInetAddress());
+                System.out.println(new Date() + "========================after create HTTP Session========================");
                 while (!this.acceptSocket.isClosed()) {
                     session.execute();
                 }
@@ -645,11 +649,15 @@ public abstract class NanoHTTPD {
         }
 
         public HTTPSession(TempFileManager tempFileManager, InputStream inputStream, OutputStream outputStream, InetAddress inetAddress) {
+        	System.out.println(new Date() + "========================start create HTTP Session========================");
             this.tempFileManager = tempFileManager;
             this.inputStream = new BufferedInputStream(inputStream, HTTPSession.BUFSIZE);
             this.outputStream = outputStream;
             this.remoteIp = inetAddress.isLoopbackAddress() || inetAddress.isAnyLocalAddress() ? "127.0.0.1" : inetAddress.getHostAddress().toString();
-            this.remoteHostname = inetAddress.isLoopbackAddress() || inetAddress.isAnyLocalAddress() ? "localhost" : inetAddress.getHostName().toString();
+            System.out.println(inetAddress);
+//            this.remoteHostname = inetAddress.isLoopbackAddress() || inetAddress.isAnyLocalAddress() ? "localhost" : inetAddress.getHostName().toString();
+            this.remoteHostname = inetAddress.isLoopbackAddress() || inetAddress.isAnyLocalAddress() ? "localhost" : inetAddress.getHostAddress();
+            System.out.println(new Date() + "========================during create HTTP Session========================");
             this.headers = new HashMap<String, String>();
         }
 
@@ -844,6 +852,7 @@ public abstract class NanoHTTPD {
 
         @Override
         public void execute() throws IOException {
+        	System.out.println(new Date() + "========================start execute========================");
             Response r = null;
             try {
                 // Read the first 8192 bytes.
@@ -857,6 +866,7 @@ public abstract class NanoHTTPD {
 
                 int read = -1;
                 this.inputStream.mark(HTTPSession.BUFSIZE);
+                System.out.println(new Date() + "========================first read========================");
                 try {
                     read = this.inputStream.read(buf, 0, HTTPSession.BUFSIZE);
                 } catch (SSLException e) {
@@ -872,6 +882,7 @@ public abstract class NanoHTTPD {
                     safeClose(this.outputStream);
                     throw new SocketException("NanoHttpd Shutdown");
                 }
+                System.out.println(new Date() + "========================before read========================");
                 while (read > 0) {
                     this.rlen += read;
                     this.splitbyte = findHeaderEnd(buf, this.rlen);
@@ -880,7 +891,7 @@ public abstract class NanoHTTPD {
                     }
                     read = this.inputStream.read(buf, this.rlen, HTTPSession.BUFSIZE - this.rlen);
                 }
-
+                System.out.println(new Date() + "========================after read========================");
                 if (this.splitbyte < this.rlen) {
                     this.inputStream.reset();
                     this.inputStream.skip(this.splitbyte);
@@ -1729,12 +1740,15 @@ public abstract class NanoHTTPD {
             do {
                 try {
                     final Socket finalAccept = NanoHTTPD.this.myServerSocket.accept();
-                    System.out.println("====================================================");
+                    System.out.println(new Date() + "========================accept========================");
                     if (this.timeout > 0) {
                         finalAccept.setSoTimeout(this.timeout);
+                        System.out.println(new Date() + "========================set timeout========================");
                     }
                     final InputStream inputStream = finalAccept.getInputStream();
+                    System.out.println(new Date() + "========================get Input Stream========================");
                     NanoHTTPD.this.asyncRunner.exec(createClientHandler(finalAccept, inputStream));
+                    System.out.println(new Date() + "========================executed========================");
                 } catch (IOException e) {
                     NanoHTTPD.LOG.log(Level.FINE, "Communication with the client broken", e);
                 }

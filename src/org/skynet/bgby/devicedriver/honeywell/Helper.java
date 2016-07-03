@@ -54,12 +54,22 @@ public class Helper {
 	}
 
 	static {
-		as_profile(Profile.HBUS_LIGHT,
+		as_profile(Profile.HBUS_LIGHT_M1,
 				handle(SimpleDimmer.CMD_SET_ALL, new ControlHbusLight()),
 				handle(SimpleDimmer.CMD_GET_ALL, new QueryHbusLight()),
 				handle(SimpleDimmer.CMD_SET_LIGHT, new ControlHbusLight()),
 				handle(SimpleDimmer.CMD_GET_LIGHT, new QueryHbusLight()));
-		as_profile(Profile.SIMPLE_LIGHT,
+		as_profile(Profile.HBUS_LIGHT_M2,
+				handle(SimpleDimmer.CMD_SET_ALL, new ControlHbusLight()),
+				handle(SimpleDimmer.CMD_GET_ALL, new QueryHbusLight()),
+				handle(SimpleDimmer.CMD_SET_LIGHT, new ControlHbusLight()),
+				handle(SimpleDimmer.CMD_GET_LIGHT, new QueryHbusLight()));
+		as_profile(Profile.LIGHT_M1,
+				handle(SimpleDimmer.CMD_SET_ALL, new ControlLight()),
+				handle(SimpleDimmer.CMD_GET_ALL, new QueryLight()),
+				handle(SimpleDimmer.CMD_SET_LIGHT, new ControlLight()),
+				handle(SimpleDimmer.CMD_GET_LIGHT, new QueryLight()));
+		as_profile(Profile.LIGHT_M2,
 				handle(SimpleDimmer.CMD_SET_ALL, new ControlLight()),
 				handle(SimpleDimmer.CMD_GET_ALL, new QueryLight()),
 				handle(SimpleDimmer.CMD_SET_LIGHT, new ControlLight()),

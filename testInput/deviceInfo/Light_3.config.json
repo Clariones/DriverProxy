@@ -1,6 +1,6 @@
 {
 	ID: "Light-3",
-	profile: "Honeywell HBus Light",
+	profile: "Honeywell.HGW2000.Maia_II_HBus_Light",
 	identity: {
 		"ipAddress":"127.0.0.1",
 		"area": 1,

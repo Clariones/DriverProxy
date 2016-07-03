@@ -1,8 +1,8 @@
 {
   "ID": "Light-2",
-  "profile": "Honeywell HBus Light",
+  "profile": "Honeywell.HGW2000.Maia_I_Light",
   "status": {
-    "state": "on",
-    "dimmer": 100
+    "state": "off",
+    "dimmer": 0
   }
 }

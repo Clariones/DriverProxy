@@ -44,17 +44,19 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 
 	enum Profile {
 		// standard: NormalFloorHeating
-		FLOOR_HEATING("Honeywell Floor Heating"),
+		FLOOR_HEATING("Honeywell.HGW2000.UFH"),
 		// standard: TBD
-		HBUS_CURTAIN("Honeywell Curtain"),
+		HBUS_CURTAIN("Honeywell.HGW2000.Curtain"),
 		// standard: TBD
-		HBUS_HBUS_CURTAIN("Honeywell HBus Curtain"),
+		HBUS_HBUS_CURTAIN("Honeywell.HGW2000.HBus_Curtain"),
 		// standard: SimpleDimer, SimpleLight
-		HBUS_LIGHT("Honeywell HBus Light"),
+		HBUS_LIGHT_M1("Honeywell.HGW2000.Maia_I_HBus_Light"),
+		HBUS_LIGHT_M2("Honeywell.HGW2000.Maia_II_HBus_Light"),
 		// standard: NormalHVAC
-		HVAC("Honeywell HDW 2000 HVAC"),
+		HVAC("Honeywell.HGW2000.485HVAC"),
 		// standard: SimpleLight
-		SIMPLE_LIGHT("Honeywell Switch Light");
+		LIGHT_M1("Honeywell.HGW2000.Maia_I_Light"),
+		LIGHT_M2("Honeywell.HGW2000.Maia_II_Light");
 
 		public static Profile byName(String name) {
 			for (Profile p : values()) {

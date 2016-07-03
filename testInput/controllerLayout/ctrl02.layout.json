@@ -23,7 +23,7 @@
           }
         },
         {
-          type: "simpleLight",
+          type: "simpleDimmer",
           params : {
             deviceID: "Light-1",
             atRow: 1,
@@ -35,7 +35,7 @@
         {
           type: "simpleLight",
           params : {
-            deviceID: "Light-1",
+            deviceID: "Light-2",
             atRow: 1,
             atCol: 3,
             hasRows: 1,
@@ -45,7 +45,7 @@
         {
           type: "simpleDimmer",
           params : {
-            deviceID: "Light-1",
+            deviceID: "Light-3",
             atRow: 2,
             atCol: 1,
             hasRows: 1,
@@ -53,21 +53,11 @@
           }
         },
         {
-          type: "simpleDimmer",
-          params : {
-            deviceID: "Light-2",
-            atRow: 2,
-            atCol: 2,
-            hasRows: 1,
-            hasCols: 1
-          }
-        },
-        {
           type: "simpleLight",
           params : {
-            deviceID: "Light-1",
+            deviceID: "Light-4",
             atRow: 2,
-            atCol: 3,
+            atCol: 2,
             hasRows: 1,
             hasCols: 1
           }
