@@ -18,6 +18,7 @@ import org.skynet.bgby.devicedriver.DriverManager;
 import org.skynet.bgby.deviceprofile.DeviceProfile;
 import org.skynet.bgby.deviceprofile.DeviceProfileManager;
 import org.skynet.bgby.devicestandard.DeviceStandard;
+import org.skynet.bgby.devicestandard.NormalFloorHeating;
 import org.skynet.bgby.devicestandard.NormalHVAC;
 import org.skynet.bgby.devicestandard.SimpleDimmer;
 import org.skynet.bgby.devicestandard.SimpleLight;
@@ -88,6 +89,7 @@ public class DriverProxyService {
 		deviceStandards.put(NormalHVAC.ID, new NormalHVAC());
 		deviceStandards.put(SimpleLight.ID, new SimpleLight());
 		deviceStandards.put(SimpleDimmer.ID, new SimpleDimmer());
+		deviceStandards.put(NormalFloorHeating.ID, new NormalFloorHeating());
 	}
 	protected DriverProxyConfiguration config;
 	protected DeviceDriverCommandHandler deviceCommandHandler;

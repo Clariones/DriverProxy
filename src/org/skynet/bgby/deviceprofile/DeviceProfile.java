@@ -1,6 +1,7 @@
 package org.skynet.bgby.deviceprofile;
 
 import java.util.Map;
+import java.util.Set;
 
 public class DeviceProfile {
 	protected String ID;

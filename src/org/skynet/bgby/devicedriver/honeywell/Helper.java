@@ -10,17 +10,15 @@ import org.skynet.bgby.devicedriver.honeywell.Hgw2000.Profile;
 import org.skynet.bgby.devicedriver.honeywell.wrapper.ControlAirCondition;
 import org.skynet.bgby.devicedriver.honeywell.wrapper.ControlHbusLight;
 import org.skynet.bgby.devicedriver.honeywell.wrapper.ControlLight;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.ControlUFHeat;
 import org.skynet.bgby.devicedriver.honeywell.wrapper.HGWDriverWrapper;
 import org.skynet.bgby.devicedriver.honeywell.wrapper.QueryAirCondition;
 import org.skynet.bgby.devicedriver.honeywell.wrapper.QueryHbusLight;
 import org.skynet.bgby.devicedriver.honeywell.wrapper.QueryLight;
-import org.skynet.bgby.devicestandard.DeviceStandardBaseImpl;
+import org.skynet.bgby.devicedriver.honeywell.wrapper.QueryUFHeat;
+import org.skynet.bgby.devicestandard.NormalFloorHeating;
 import org.skynet.bgby.devicestandard.NormalHVAC;
 import org.skynet.bgby.devicestandard.SimpleDimmer;
-import org.skynet.bgby.devicestandard.SimpleLight;
-import org.skynet.bgby.devicestatus.DeviceStatus;
-import org.skynet.bgby.driverutils.DriverUtils;
-import org.skynet.bgby.protocol.IRestResponse;
 
 public class Helper {
 	protected static class CmdProfileHandler {
@@ -76,6 +74,13 @@ public class Helper {
 				handle(NormalHVAC.CMD_SET_FAN_MODE, new ControlAirCondition()),
 				handle(NormalHVAC.CMD_SET_RUNNING_MODE, new ControlAirCondition()),
 				handle(NormalHVAC.CMD_SET_TEMPERATURE, new ControlAirCondition()));
+		as_profile(Profile.FLOOR_HEATING,
+				handle(NormalFloorHeating.CMD_GET_ROOM_TEMPERATURE, new QueryUFHeat()),
+				handle(NormalFloorHeating.CMD_GET_TEMPERATURE_SETTING, new QueryUFHeat()),
+				handle(NormalFloorHeating.CMD_GET_ALL, new QueryUFHeat()),
+				handle(NormalFloorHeating.CMD_SET_ALL, new ControlUFHeat()),
+				handle(NormalFloorHeating.CMD_SET_STATE, new ControlUFHeat()),
+				handle(NormalFloorHeating.CMD_SET_TEMPERATURE, new ControlUFHeat()));
 	}
 
 	protected Helper() {

@@ -13,7 +13,6 @@ public class NormalHVAC extends DeviceStandardBaseImpl {
 
 	public static final String ID = "HVAC.Normal";
 
-	public static final String TERM_DEVICE_REPORT = "deviceReport";
 	public static final String TERM_FAN_MODE = "fanMode";
 	public static final String TERM_FAN_MODES = "validFanModes";
 	public static final String TERM_HAS_HUMIDITY = "humidityFunction";
@@ -28,15 +27,15 @@ public class NormalHVAC extends DeviceStandardBaseImpl {
 	public static final String TERM_WING_DIRECTIONS = "validwingDirections";
 	public static final String TERM_HAS_WING_DIRECTION = "hasWingDirection";
 
-	public static final int ERR_HVAC_START_CODE = 76000;
+
 	public static final int ERR_CONNECT_TO_GATEWAY = ERR_HVAC_START_CODE + 1;
 	public static final int ERR_SET_TEMP_OUT_OF_RANGE = ERR_HVAC_START_CODE + 2;
 	public static final int ERR_INVALID_FAN_MODE = ERR_HVAC_START_CODE + 3;
 	public static final int ERR_INVALID_RUNNING_MODE = ERR_HVAC_START_CODE + 4;
 
 	public NormalHVAC() {
+		super();
 		id = ID;
-		TERM(TERM_DEVICE_REPORT);
 		TERM(TERM_DISPLAY_NAME);
 		TERM(TERM_FAN_MODE);
 		TERM(TERM_FAN_MODES);
@@ -60,7 +59,5 @@ public class NormalHVAC extends DeviceStandardBaseImpl {
 		CMD(CMD_SET_FAN_MODE);
 		CMD(CMD_SET_RUNNING_MODE);
 		CMD(CMD_SET_TEMPERATURE);
-		CMD(CMD_SET_ALL);
-		CMD(CMD_GET_ALL);
 	}
 }

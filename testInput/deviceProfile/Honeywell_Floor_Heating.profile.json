@@ -1,0 +1,10 @@
+{
+	ID: "Honeywell Floor Heating",
+	standard: "FloorHeating.Normal",
+	identifiers: ["ipAddress","id"],
+	spec: {
+		canQueryStatus: "yes",
+		roomTemperatureRange: [16.0, 30.0],
+		temperatureSettingRange:[16.0, 30.0]
+	}
+}
