@@ -2,8 +2,8 @@
   "ID": "UFH-1",
   "profile": "Honeywell.HGW2000.UFH",
   "status": {
-    "temperatureSetting": 27.0,
+    "temperatureSetting": 21,
     "state": false,
-    "roomTemperature": 24.0
+    "roomTemperature": 24
   }
 }

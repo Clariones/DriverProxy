@@ -61,6 +61,16 @@
             hasRows: 1,
             hasCols: 1
           }
+        },
+        {
+          type: "normalFloorHeating",
+          params : {
+            deviceID: "UFH-1",
+            atRow: 2,
+            atCol: 3,
+            hasRows: 1,
+            hasCols: 1
+          }
         }
       ]
     }]

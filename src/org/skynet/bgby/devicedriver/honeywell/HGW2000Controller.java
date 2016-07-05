@@ -302,7 +302,7 @@ public class HGW2000Controller {
 	public ExecutionResult queryHBusLight(int area, int loop)
 			throws IOException {
 
-		String requestCommand = this.construstRequest("req", "ac", area, loop,
+		String requestCommand = this.construstRequest("req", "hbuslig", area, loop,
 				0, 0, 0, 0);
 		return getResult(requestCommand);
 

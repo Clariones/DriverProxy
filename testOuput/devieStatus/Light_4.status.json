@@ -2,7 +2,7 @@
   "ID": "Light-4",
   "profile": "Honeywell.HGW2000.Maia_II_Light",
   "status": {
-    "dimmer": 0,
-    "state": "off"
+    "dimmer": 100,
+    "state": "on"
   }
 }

@@ -4,8 +4,8 @@ public class SimpleLight extends DeviceStandardBaseImpl {
 	public static final String ID = "Light.Simple";
 	
 	public static final String TERM_LIGHT_STATUES = "state";
-	public static final String TERM_LIGHT_ON = "on";
-	public static final String TERM_LIGHT_OFF = "off";
+	public static final String TERM_LIGHT_ON = TERM_STATE_ON;
+	public static final String TERM_LIGHT_OFF = TERM_STATE_OFF;
 	public static final String TERM_CAN_TOGGLE = "canDoToggle";
 	public static final String CMD_SET_LIGHT = "setLight";
 	public static final String CMD_GET_LIGHT = "getLight";
