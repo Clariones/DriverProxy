@@ -1,5 +1,9 @@
 package org.skynet.bgby.deviceprofile;
 
+import java.util.List;
+import java.util.Map;
+
+import org.skynet.bgby.command.management.UpdateResult;
 import org.skynet.bgby.driverproxy.DPModuleException;
 import org.skynet.bgby.driverproxy.DPModuleStatusReporter;
 import org.skynet.bgby.driverproxy.DriverProxyService;
@@ -43,4 +47,15 @@ public class DeviceProfileManagerImpl implements DeviceProfileManager {
 		this.proxy = proxy;
 	}
 
+	@Override
+	public Map<String, DeviceProfile> listAllProfiles() {
+		return repository.getAll();
+	}
+
+	@Override
+	public UpdateResult update(Map<String, DeviceProfile> data, boolean overWriteAll) {
+		return repository.update(data, overWriteAll);
+	}
+
+	
 }

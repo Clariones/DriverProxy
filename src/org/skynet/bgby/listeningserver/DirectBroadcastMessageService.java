@@ -1,5 +1,7 @@
 package org.skynet.bgby.listeningserver;
 
+import java.io.IOException;
+import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,7 +12,7 @@ import org.skynet.bgby.protocol.UdpData;
 import org.skynet.bgby.protocol.UdpMessage;
 import org.skynet.bgby.protocol.UdpMessageCodec;
 
-public class MessageService extends MulticastListenerService {
+public class DirectBroadcastMessageService extends UdpListenerService {
 	protected UdpMessageCodec codec;
 	protected List<IUdpMessageHandler> handlers;
 	
@@ -67,6 +69,18 @@ public class MessageService extends MulticastListenerService {
 		}
 		
 		return null;
+	}
+	
+	protected void createUdpSocket() throws IOException {
+//		InetAddress group = InetAddress.getByName(getListeningAddress());
+//		 MulticastSocket msr = null;
+//		 msr = new MulticastSocket(getListeningPort());
+//		 msr.setLoopbackMode(false);
+//		 msr.joinGroup(group);
+//		 listeningSocket = msr;
+		listeningSocket = new DatagramSocket(getListeningPort());
+		listeningSocket.setBroadcast(true);
+		sendingSocket = new DatagramSocket();
 	}
 	
 	public static class UdpMessageHandlingContext {

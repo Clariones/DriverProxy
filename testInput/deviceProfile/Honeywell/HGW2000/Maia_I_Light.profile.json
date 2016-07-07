@@ -1,9 +1,12 @@
 {
-	ID: "Honeywell.HGW2000.Maia_I_Light",
-	standard: "Light.Simple",
-	identifiers: ["ipAddress","id"],
-	spec: {
-		canDoToggle: "no",
-		canQueryStatus: "no"
-	}
+  "ID": "Honeywell.HGW2000.Maia_I_Light",
+  "standard": "Light.Simple",
+  "identifiers": [
+    "ipAddress",
+    "id"
+  ],
+  "spec": {
+    "canDoToggle": "no",
+    "canQueryStatus": "no"
+  }
 }

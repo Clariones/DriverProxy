@@ -56,12 +56,12 @@ public class LayoutUtils {
 		return child;
 	}
 
-	public static String toJson(List<ILayout> layouts) {
+	public static String toJson(List<? extends ILayout> layouts) {
 		List<LayoutData> layoutDatas = new ArrayList<>();
 		if (layouts == null || layouts.isEmpty()){
 			return "[]";
 		}
-		Iterator<ILayout> it = layouts.iterator();
+		Iterator<? extends ILayout> it = layouts.iterator();
 		while(it.hasNext()){
 			ILayout comp = it.next();
 			LayoutData data = getLayoutData(comp);

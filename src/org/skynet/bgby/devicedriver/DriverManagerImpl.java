@@ -99,11 +99,11 @@ public abstract class DriverManagerImpl implements DriverManager {
 	}
 
 	protected void initDriverStatus() throws DPModuleException {
-		List<DeviceStatus> deviceStatus = deviceStatusManager.listAllDevices();
+		 Map<String, DeviceStatus> deviceStatus = deviceStatusManager.listAllDevices();
 		if (deviceStatus == null || deviceStatus.isEmpty()){
 			return;
 		}
-		for (DeviceStatus device : deviceStatus) {
+		for (DeviceStatus device : deviceStatus.values()) {
 			DeviceConfigData config = getDeviceConfigManager().getDeviceConfigData(device.getID());
 			DeviceDriver driver = lookupDriverForDevice(device.getID(), device, config);
 			if (driver == null){

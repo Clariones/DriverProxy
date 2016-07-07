@@ -2,6 +2,7 @@ package org.skynet.bgby.command.management;
 
 import org.skynet.bgby.deviceconfig.DeviceConfigManager;
 import org.skynet.bgby.deviceprofile.DeviceProfileManager;
+import org.skynet.bgby.devicestatus.DeviceStatusManager;
 import org.skynet.bgby.layout.LayoutManager;
 import org.skynet.bgby.restserver.IRestCommandHandler;
 
@@ -9,7 +10,16 @@ public abstract class BaseManageCmd implements IRestCommandHandler {
 	protected DeviceProfileManager deviceProfileManager;
 	protected DeviceConfigManager deviceConfigManager;
 	protected LayoutManager layoutManager;
+	protected DeviceStatusManager deviceStatusManager;
 	
+	public DeviceStatusManager getDeviceStatusManager() {
+		return deviceStatusManager;
+	}
+
+	public void setDeviceStatusManager(DeviceStatusManager deviceStatusManager) {
+		this.deviceStatusManager = deviceStatusManager;
+	}
+
 	public DeviceProfileManager getDeviceProfileManager() {
 		return deviceProfileManager;
 	}
@@ -35,4 +45,6 @@ public abstract class BaseManageCmd implements IRestCommandHandler {
 	}
 
 	public abstract String getCommand();
+
+	
 }

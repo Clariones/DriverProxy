@@ -2,6 +2,7 @@ package org.skynet.bgby.driverproxy;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,6 +12,8 @@ import java.util.logging.Level;
 import org.skynet.bgby.command.management.BaseManageCmd;
 import org.skynet.bgby.command.management.CmdGetLayout;
 import org.skynet.bgby.command.management.CmdGetProfileByDevice;
+import org.skynet.bgby.command.management.CmdGetProxyData;
+import org.skynet.bgby.command.management.CmdSetProxyData;
 import org.skynet.bgby.deviceconfig.DeviceConfigData;
 import org.skynet.bgby.deviceconfig.DeviceConfigManager;
 import org.skynet.bgby.devicedriver.DeviceDriver;
@@ -26,9 +29,9 @@ import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.devicestatus.DeviceStatusManager;
 import org.skynet.bgby.driverutils.DriverUtils;
 import org.skynet.bgby.layout.LayoutManager;
+import org.skynet.bgby.listeningserver.DirectBroadcastMessageService.UdpMessageHandlingContext;
 import org.skynet.bgby.listeningserver.IUdpMessageHandler;
 import org.skynet.bgby.listeningserver.ListeningServerException;
-import org.skynet.bgby.listeningserver.MessageService.UdpMessageHandlingContext;
 import org.skynet.bgby.protocol.IHttpResponse;
 import org.skynet.bgby.protocol.IRestRequest;
 import org.skynet.bgby.protocol.IRestResponse;
@@ -82,9 +85,11 @@ public class DriverProxyService {
 		
 	}
 
-	protected static final Map<String, DeviceStandard> deviceStandards = new HashMap<>();
+	public static final Map<String, DeviceStandard> deviceStandards = new HashMap<>();
 
 	protected static final String TAG = "DriverProxyService";
+
+	private static final long HEART_BEAT_DEAD_TIME = 35*1000;
 	static {
 		deviceStandards.put(NormalHVAC.ID, new NormalHVAC());
 		deviceStandards.put(SimpleLight.ID, new SimpleLight());
@@ -96,7 +101,8 @@ public class DriverProxyService {
 	protected DeviceConfigManager deviceConfigManager;
 	protected DeviceProfileManager deviceProfileManager;
 	protected DeviceStatusManager deviceStatusManager;
-
+	protected Map<String, AppOnLineInfo> appInfos;
+	
 	protected DriverManager driverManager;
 
 	protected Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -248,7 +254,51 @@ public class DriverProxyService {
 			DriverUtils.log(Level.FINE, TAG, "Receive self message, ignore");
 			return null;
 		}
+		String command = inputMessage.getCommand();
+		switch (command){
+		case UdpMessage.CMD_HEART_BEAT:
+			updateAppOnlineInfo(inputMessage);
+			return null;
+		case UdpMessage.CMD_DEVICE_STATUS_REPORT:
+			updateDeviceStatusReport(inputMessage);
+			return null;
+		}
 		return null;
+	}
+
+	private void updateDeviceStatusReport(UdpMessage inputMessage) {
+		String appId = inputMessage.getFromDevice();
+		DeviceStatus device = getDeviceStatusManager().getDevice(appId);
+		if (device == null){
+			return;
+		}
+		Iterator<Entry<String, String>> it = inputMessage.getParams().entrySet().iterator();
+		Map<String, String> params = new HashMap<>();
+		while(it.hasNext()){
+			Entry<String, String> ent = it.next();
+			String key = ent.getKey();
+			if (key.startsWith(UdpMessage.FIELD_DEVICE_STATUES_PREFIX)){
+				String statusKey = key.substring(UdpMessage.FIELD_DEVICE_STATUES_PREFIX.length());
+				params.put(statusKey, ent.getValue());
+			}
+		}
+//		device.getStatus()
+	}
+
+	private void updateAppOnlineInfo(UdpMessage inputMessage) {
+		String appId = inputMessage.getFromDevice();
+		String appType = inputMessage.getFromApp();
+		SocketAddress address = inputMessage.getFromAddress();
+		
+		AppOnLineInfo info = appInfos.get(appId);
+		if (info == null){
+			info = new AppOnLineInfo();
+			info.setID(appId);
+			appInfos.put(appId, info);
+		}
+		info.setAppType(appType);
+		info.setLastActiveTime(System.currentTimeMillis());
+		info.setUdpAddress(address);
 	}
 
 	protected void initDeviceCommandHandlers() {
@@ -260,10 +310,12 @@ public class DriverProxyService {
 	 * 有以下几个管理命令需要被处理： 1. 取控制屏的Layout 2. 取控制屏的Layout中的所有设备的Profile
 	 */
 	protected void initManagementCommandHandlers() {
-		this.restMngCmdHandler = new CmdRestMngHandler();
+		restMngCmdHandler = new CmdRestMngHandler();
 		registerMngCmdHandler(new CmdGetLayout());
 		registerMngCmdHandler(new CmdGetProfileByDevice());
-		this.restService.registerCommandHandler(restMngCmdHandler);
+		registerMngCmdHandler(new CmdGetProxyData());
+		registerMngCmdHandler(new CmdSetProxyData());
+		restService.registerCommandHandler(restMngCmdHandler);
 	}
 
 	protected void initRestCommandHandlers() {
@@ -273,7 +325,19 @@ public class DriverProxyService {
 
 	public void multicastDeviceStatus(DeviceStatus deviceStatus) {
 		UdpMessage data = createDeviceStatusMsgData(deviceStatus);
-		this.multicastHandler.sendMessage(data);
+		Iterator<Entry<String, AppOnLineInfo>> it = appInfos.entrySet().iterator();
+		long cutTs = System.currentTimeMillis();
+		while(it.hasNext()){
+			Entry<String, AppOnLineInfo> ent = it.next();
+			AppOnLineInfo info = ent.getValue();
+			if (cutTs - info.getLastActiveTime() > HEART_BEAT_DEAD_TIME){
+				it.remove();
+				continue;
+			}
+			
+			this.multicastHandler.sendMessage(data, info.getUdpAddress());
+		}
+		this.multicastHandler.sendMessage(data, new InetSocketAddress(getConfig().getMulticastAddress(), getConfig().getMulticastPort()));
 	}
 
 	protected void registerMngCmdHandler(BaseManageCmd cmdHandler) {
@@ -281,6 +345,7 @@ public class DriverProxyService {
 		cmdHandler.setDeviceConfigManager(getDeviceConfigManager());
 		cmdHandler.setDeviceProfileManager(getDeviceProfileManager());
 		cmdHandler.setLayoutManager(getLayoutManager());
+		cmdHandler.setDeviceStatusManager(getDeviceStatusManager());
 		restMngCmdHandler.addHandler(command, cmdHandler);
 	}
 
@@ -334,6 +399,7 @@ public class DriverProxyService {
 	
 	public void start() {
 		DriverUtils.log(Level.INFO, TAG, "Starting...");
+		appInfos = new HashMap<>();
 		this.steps = 1;
 		// create Http Server, Client, and Multicast handler
 		restClient = new DriverProxyRestClient();

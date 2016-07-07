@@ -2,6 +2,8 @@ package org.skynet.bgby.deviceconfig;
 
 import java.io.File;
 
+import org.skynet.bgby.driverutils.SimpleFileRepository;
+
 public class DeviceConfigManagerPCImpl extends DeviceConfigManagerImpl {
 
 	public DeviceConfigManagerPCImpl(){
@@ -19,7 +21,7 @@ public class DeviceConfigManagerPCImpl extends DeviceConfigManagerImpl {
 		if (this.repository == null){
 			repository = new DeviceConfigFileRepository();
 		}
-		DeviceConfigFileRepository repo = (DeviceConfigFileRepository) repository;
+		SimpleFileRepository<DeviceConfigData> repo = (SimpleFileRepository<DeviceConfigData>) repository;
 		repo.setBaseFolder(baseFolder);
 	}
 

@@ -1,12 +1,12 @@
 {
-	ID: "UFH-1",
-	profile: "Honeywell.HGW2000.UFH",
-	identity: {
-		"ipAddress":"127.0.0.1",
-		"id": 10
-	},
-	extParams: {
-		userName: "admin",
-		password: "123456"
-	}
+  "ID": "UFH-1",
+  "profile": "Honeywell.HGW2000.UFH",
+  "identity": {
+    "ipAddress": "127.0.0.1",
+    "id": 10.0
+  },
+  "extParams": {
+    "userName": "admin",
+    "password": "123456"
+  }
 }

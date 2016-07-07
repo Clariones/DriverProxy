@@ -1,6 +1,6 @@
 package org.skynet.bgby.listeningserver;
 
-import org.skynet.bgby.listeningserver.MessageService.UdpMessageHandlingContext;
+import org.skynet.bgby.listeningserver.DirectBroadcastMessageService.UdpMessageHandlingContext;
 
 public interface IUdpMessageHandler {
 

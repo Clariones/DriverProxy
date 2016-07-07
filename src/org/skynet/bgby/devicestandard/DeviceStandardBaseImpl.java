@@ -3,6 +3,8 @@ package org.skynet.bgby.devicestandard;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.skynet.bgby.error.ErrorCode;
+
 public abstract class DeviceStandardBaseImpl implements DeviceStandard {
 	public void setId(String id) {
 		this.id = id;
@@ -15,17 +17,11 @@ public abstract class DeviceStandardBaseImpl implements DeviceStandard {
 	public static final String CMD_GET_ALL = "getAll";
 	public static final String CMD_SET_ALL = "setAll";
 	
-	public static final int ERR_DEVICE_COMMON_START_CODE = 75000;
-	public static final int ERR_HVAC_START_CODE = 76000;
-	public static final int ERR_LIGHT_START_CODE = 77000;
-	public static final int ERR_FLOORHEATING_START_CODE = 78000;
-
-	
-	public static final int ERR_UNSUPPORTED_COMMAND = ERR_DEVICE_COMMON_START_CODE + 1;
-	public static final int ERR_IO_EXCEPTION = ERR_DEVICE_COMMON_START_CODE + 2;
-	public static final int ERR_WRONG_PROFILE = ERR_DEVICE_COMMON_START_CODE + 3;
-	public static final int ERR_MISS_PROFILE = ERR_DEVICE_COMMON_START_CODE + 4;
-	public static final int ERR_WRONG_STATUS = ERR_DEVICE_COMMON_START_CODE + 5;
+	public static final int ERR_UNSUPPORTED_COMMAND = ErrorCode.DEVICE_COMMON_START_CODE + 1;
+	public static final int ERR_IO_EXCEPTION = ErrorCode.DEVICE_COMMON_START_CODE + 2;
+	public static final int ERR_WRONG_PROFILE = ErrorCode.DEVICE_COMMON_START_CODE + 3;
+	public static final int ERR_MISS_PROFILE = ErrorCode.DEVICE_COMMON_START_CODE + 4;
+	public static final int ERR_WRONG_STATUS = ErrorCode.DEVICE_COMMON_START_CODE + 5;
 	
 	protected Set<String> terms;
 	protected Set<String> commands;

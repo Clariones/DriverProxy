@@ -1,5 +1,7 @@
 package org.skynet.bgby.devicestandard;
 
+import org.skynet.bgby.error.ErrorCode;
+
 public class NormalHVAC extends DeviceStandardBaseImpl {
 
 	public static final String CMD_GET_FAM_MODE = "getFanMode";
@@ -28,10 +30,10 @@ public class NormalHVAC extends DeviceStandardBaseImpl {
 	public static final String TERM_HAS_WING_DIRECTION = "hasWingDirection";
 
 
-	public static final int ERR_CONNECT_TO_GATEWAY = ERR_HVAC_START_CODE + 1;
-	public static final int ERR_SET_TEMP_OUT_OF_RANGE = ERR_HVAC_START_CODE + 2;
-	public static final int ERR_INVALID_FAN_MODE = ERR_HVAC_START_CODE + 3;
-	public static final int ERR_INVALID_RUNNING_MODE = ERR_HVAC_START_CODE + 4;
+	public static final int ERR_CONNECT_TO_GATEWAY = ErrorCode.HVAC_START_CODE + 1;
+	public static final int ERR_SET_TEMP_OUT_OF_RANGE = ErrorCode.HVAC_START_CODE + 2;
+	public static final int ERR_INVALID_FAN_MODE = ErrorCode.HVAC_START_CODE + 3;
+	public static final int ERR_INVALID_RUNNING_MODE = ErrorCode.HVAC_START_CODE + 4;
 
 	public NormalHVAC() {
 		super();

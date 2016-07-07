@@ -1,5 +1,6 @@
 package org.skynet.bgby.layout;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,7 +10,7 @@ import java.util.List;
 
 import org.skynet.bgby.driverutils.SimpleFileRepository;
 
-public class LayoutFileRepository extends SimpleFileRepository<List<ILayout>> implements LayoutRepository{
+public class LayoutFileRepository extends SimpleFileRepository<List<LayoutData>> implements LayoutRepository{
 
 
 	@Override
@@ -18,10 +19,10 @@ public class LayoutFileRepository extends SimpleFileRepository<List<ILayout>> im
 	}
 
 	@Override
-	protected List<ILayout> loadFromFile(FileInputStream fIns) {
+	protected List<LayoutData> loadFromFile(FileInputStream fIns) {
 		Reader reader = new InputStreamReader(fIns);
 		LayoutData[] data = LayoutUtils.gson.fromJson(reader, new LayoutData[0].getClass());
-		List<ILayout> result = new ArrayList<>();
+		List<LayoutData> result = new ArrayList<>();
 		if (data == null || data.length == 0){
 			return result;
 		}
@@ -32,20 +33,32 @@ public class LayoutFileRepository extends SimpleFileRepository<List<ILayout>> im
 	}
 
 	@Override
-	protected String convertToJsonStr(List<ILayout> data) throws IOException{
+	protected String convertToJsonStr(List<LayoutData> data) throws IOException{
 		return LayoutUtils.toJson(data);
 	}
 
 	@Override
-	public List<ILayout> getLayoutByControllerID(String controllerID) {
+	public List<LayoutData> getLayoutByControllerID(String controllerID) {
 		return getDataByID(controllerID);
 	}
 
 	@Override
-	public void setControllerLayout(String controllerID, List<ILayout> layoutData) throws IOException {
+	public void setControllerLayout(String controllerID, List<LayoutData> layoutData) throws IOException {
 		setData(controllerID, layoutData);
 	}
 
-	
+	@Override
+	protected String getDataKey(File dataFile, List<LayoutData> result) {
+		// TODO Auto-generated method stub
+		String fileName = dataFile.getName();
+		return fileName.substring(0, fileName.length()-getFilePostfix().length());
+	}
+
+	@Override
+	protected void verifyData(List<LayoutData> data) throws IOException {
+		if (data == null){
+			throw new IOException("Try to save null data");
+		}
+	}
 
 }
