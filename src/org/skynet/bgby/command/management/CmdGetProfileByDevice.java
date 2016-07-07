@@ -10,6 +10,7 @@ import org.skynet.bgby.deviceconfig.DeviceConfigData;
 import org.skynet.bgby.deviceprofile.DeviceProfile;
 import org.skynet.bgby.layout.ILayout;
 import org.skynet.bgby.layout.ILayoutGroup;
+import org.skynet.bgby.layout.LayoutData;
 import org.skynet.bgby.layout.LayoutUtils;
 import org.skynet.bgby.protocol.IRestRequest;
 import org.skynet.bgby.protocol.IRestResponse;
@@ -23,7 +24,7 @@ public class CmdGetProfileByDevice extends BaseManageCmd implements IRestCommand
 	@Override
 	public IRestResponse handleCommand(IRestRequest restRequest) {
 		String controllerID = restRequest.getTarget();
-		List<ILayout> tgtLayout = getLayoutManager().getControllerLayout(controllerID);
+		List<LayoutData> tgtLayout = getLayoutManager().getControllerLayout(controllerID);
 		if (tgtLayout == null || tgtLayout.isEmpty()){
 			return newErrorResponse(1, "Layout not existed for device " + controllerID);
 		}
@@ -62,8 +63,8 @@ public class CmdGetProfileByDevice extends BaseManageCmd implements IRestCommand
 		return response;
 	}
 
-	protected void findAllDeviceIds(List<ILayout> tgtLayout, Set<String> deviceIds) {
-		for(ILayout layout: tgtLayout){
+	protected void findAllDeviceIds(List<LayoutData> tgtLayout, Set<String> deviceIds) {
+		for(LayoutData layout: tgtLayout){
 			findDevicesInOneLayout(layout, deviceIds);
 		}
 	}

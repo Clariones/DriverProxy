@@ -2,6 +2,8 @@ package org.skynet.bgby.protocol;
 
 import java.util.Map;
 
+import fi.iki.elonen.NanoHTTPD.Method;
+
 public class RestRequestImpl implements IRestRequest {
 
 	protected String command;
@@ -9,7 +11,14 @@ public class RestRequestImpl implements IRestRequest {
 	protected Map<String, String> params;
 	protected String requestUri;
 	protected String requestParameterString;
+	protected Method method;
 	
+	public Method getMethod() {
+		return method;
+	}
+	public void setMethod(Method method) {
+		this.method = method;
+	}
 	@Override
 	public void setRequestUri(String requestUri) {
 		this.requestUri = requestUri;

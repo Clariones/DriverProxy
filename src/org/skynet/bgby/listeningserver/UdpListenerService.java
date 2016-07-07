@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import org.skynet.bgby.driverutils.DriverUtils;
 import org.skynet.bgby.protocol.UdpData;
 
-public class MulticastListenerService {
+public abstract class UdpListenerService {
 	protected final String TAG;
 	protected String listeningAddress;
 	// protected MulticastSocket listeningSocket;
@@ -25,9 +25,13 @@ public class MulticastListenerService {
 	protected MainLoopThread mainThread;
 	protected boolean damon;
 	protected boolean needToStop;
-
-	public MulticastListenerService() {
+	protected Object sendLock;
+	protected Object recvLock;
+	
+	public UdpListenerService() {
 		TAG = this.getClass().getName();
+		sendLock = new Object();
+		recvLock = new Object();
 	}
 
 	public boolean isNeedToStop() {
@@ -81,7 +85,7 @@ public class MulticastListenerService {
 		}
 		// create socket
 		try {
-			createMulticastSocket();
+			createUdpSocket();
 		} catch (Exception e) {
 			throw new ListeningServerException("Failed create multicast socket", e);
 		}
@@ -91,6 +95,8 @@ public class MulticastListenerService {
 		startLoop();
 	}
 
+	protected abstract void createUdpSocket() throws IOException;
+
 	protected void createThreadPool() {
 		this.threadPool = Executors.newFixedThreadPool(5);
 	}
@@ -98,25 +104,15 @@ public class MulticastListenerService {
 	protected void startLoop() {
 		mainThread = new MainLoopThread();
 		mainThread.setDaemon(isDamon());
-		mainThread.setName("Multicast Listener");
+		mainThread.setName("UDP Listener");
 		mainThread.start();
 	}
 
-	protected void createMulticastSocket() throws IOException {
-		InetAddress group = InetAddress.getByName(getListeningAddress());
-		// MulticastSocket msr = null;
-		// msr = new MulticastSocket(getListeningPort());
-		// msr.setLoopbackMode(false);
-		// msr.joinGroup(group);
-		// listeningSocket = msr;
-		listeningSocket = new DatagramSocket(getListeningPort());
-		listeningSocket.setBroadcast(true);
-		sendingSocket = new DatagramSocket();
-	}
+	
 
 	protected void testFoo(InetAddress ip) {
 		try {
-//			ip = InetAddress.getByName("192.168.2.105");
+			ip = InetAddress.getByName("192.168.2.105");
 
 			System.out.println(ip);
 			NetworkInterface ni = NetworkInterface.getByInetAddress(ip);
@@ -188,7 +184,7 @@ public class MulticastListenerService {
 		public void run() {
 			UdpData response = serve(message);
 			if (response != null) {
-				sendToMulticastSocket(response);
+				sendUdpMessage(response);
 			}
 		}
 
@@ -199,14 +195,11 @@ public class MulticastListenerService {
 			setHasStarted(true);
 			byte[] buffer = new byte[1024];
 			DriverUtils.log(Level.INFO, TAG,
-					"Multicast listening service started at " + listeningSocket.getLocalSocketAddress());
+					"UDP listening service started at " + listeningSocket.getLocalSocketAddress());
 			while (!isNeedToStop() && !listeningSocket.isClosed()) {
 				DatagramPacket dp = new DatagramPacket(buffer, buffer.length); // 2.����һ��ָ����������С���鲥��ַ�Ͷ˿ڵ�DatagramPacket�鲥���ݰ�����
 				try {
 					listeningSocket.receive(dp);
-					InetAddress ip = listeningSocket.getLocalAddress();
-					System.out.println(dp.getAddress());
-					testFoo(ip);
 					DriverUtils.log(Level.SEVERE, TAG,
 							"Multicast listening service got message: " + dp.getSocketAddress());
 					processDataPacket(dp);
@@ -226,7 +219,7 @@ public class MulticastListenerService {
 		return null;
 	}
 
-	public void sendToMulticastSocket(UdpData response) {
+	public void sendUdpMessage(UdpData response) {
 		if (this.sendingSocket == null || sendingSocket.isClosed()) {
 			DriverUtils.log(Level.SEVERE, TAG, "Send message when socket not ready");
 			return;
@@ -236,17 +229,15 @@ public class MulticastListenerService {
 			DriverUtils.log(Level.SEVERE, TAG, "Cannot send empty message");
 			return;
 		}
+		
+		if (response.getSocketAddress() == null) {
+			DriverUtils.log(Level.SEVERE, TAG, "Cannot send message without address");
+			return;
+		}
 
-		synchronized (sendingSocket) {
+		synchronized (sendLock) {
 			try {
-				// DatagramPacket dp = new DatagramPacket(data, data.length,
-				// new InetSocketAddress(getListeningAddress(),
-				// getListeningPort()));
-				// DatagramPacket dp = new DatagramPacket(data, data.length,
-				// new InetSocketAddress("255.255.255.255",
-				// getListeningPort()));
-				DatagramPacket dp = new DatagramPacket(data, data.length,
-						new InetSocketAddress("192.168.2.255", getListeningPort()));
+				DatagramPacket dp = new DatagramPacket(data, data.length, response.getSocketAddress());
 
 				// listeningSocket.send(dp);
 				sendingSocket.send(dp);

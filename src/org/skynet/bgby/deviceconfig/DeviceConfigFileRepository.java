@@ -1,5 +1,6 @@
 package org.skynet.bgby.deviceconfig;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,6 +31,24 @@ public class DeviceConfigFileRepository extends SimpleFileRepository<DeviceConfi
 	@Override
 	protected String getFilePostfix() {
 		return ".config.json";
+	}
+
+	@Override
+	protected String getDataKey(File dataFile, DeviceConfigData result) {
+		return result.getID();
+	}
+
+	@Override
+	protected void verifyData(DeviceConfigData data) throws IOException {
+		if (data.getID() == null){
+			throw new IOException("DeviceConfigData without ID");
+		}
+		if (data.getIdentity() == null || data.getIdentity().isEmpty()){
+			throw new IOException("DeviceConfigData " + data.getID()+" without identify");
+		}
+		if (data.getProfile() == null){
+			throw new IOException("DeviceConfigData " + data.getID()+" without profile");
+		}
 	}
 
 	

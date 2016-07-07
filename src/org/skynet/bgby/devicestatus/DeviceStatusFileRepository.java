@@ -1,5 +1,6 @@
 package org.skynet.bgby.devicestatus;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,6 +46,21 @@ public class DeviceStatusFileRepository extends SimpleFileRepository<DeviceStatu
 		}
 		mineData.getStatus().putAll(data.getStatus());
 		saveData(data.getID(), mineData);
+	}
+
+	@Override
+	protected String getDataKey(File dataFile, DeviceStatus result) {
+		return result.getID();
+	}
+
+	@Override
+	protected void verifyData(DeviceStatus data) throws IOException {
+		if (data.getID() == null){
+			throw new IOException("DeviceStatus without ID");
+		}
+		if (data.getProfile() == null){
+			throw new IOException("DeviceStatus " + data.getID()+" without profile");
+		}
 	}
 
 

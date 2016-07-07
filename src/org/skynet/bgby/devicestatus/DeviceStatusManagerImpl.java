@@ -2,6 +2,7 @@ package org.skynet.bgby.devicestatus;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.skynet.bgby.driverproxy.DPModuleException;
 import org.skynet.bgby.driverproxy.DPModuleStatusReporter;
@@ -31,9 +32,8 @@ public class DeviceStatusManagerImpl implements DeviceStatusManager {
 	}
 
 	@Override
-	public List<DeviceStatus> listAllDevices() {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, DeviceStatus> listAllDevices() {
+		return repository.getAll();
 	}
 
 	@Override

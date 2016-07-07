@@ -1,5 +1,7 @@
 package org.skynet.bgby.devicestandard;
 
+import org.skynet.bgby.error.ErrorCode;
+
 public class SimpleLight extends DeviceStandardBaseImpl {
 	public static final String ID = "Light.Simple";
 	
@@ -11,8 +13,8 @@ public class SimpleLight extends DeviceStandardBaseImpl {
 	public static final String CMD_GET_LIGHT = "getLight";
 	public static final String CMD_TOGGLE_LIGHT = "toggleLight";
 	
-	public static final int ERR_UNSUPPORTED_ACTION = ERR_LIGHT_START_CODE + 1;
-	public static final int ERR_MISS_LIGHT_STATUES = ERR_LIGHT_START_CODE + 2;
+	public static final int ERR_UNSUPPORTED_ACTION = ErrorCode.LIGHT_START_CODE + 1;
+	public static final int ERR_MISS_LIGHT_STATUES = ErrorCode.LIGHT_START_CODE + 2;
 
 	public SimpleLight() {
 		super();

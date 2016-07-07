@@ -2,7 +2,9 @@ package org.skynet.bgby.layout;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
+import org.skynet.bgby.command.management.UpdateResult;
 import org.skynet.bgby.driverproxy.DPModuleException;
 import org.skynet.bgby.driverproxy.DPModuleStatusReporter;
 import org.skynet.bgby.driverproxy.DriverProxyService;
@@ -14,12 +16,12 @@ public class LayoutManagerImpl implements LayoutManager {
 	protected DriverProxyService proxy;
 
 	@Override
-	public List<ILayout> getControllerLayout(String controllerID) {
+	public List<LayoutData> getControllerLayout(String controllerID) {
 		return repository.getLayoutByControllerID(controllerID);
 	}
 
 	@Override
-	public void setControllerLayout(String controllerID, List<ILayout> layoutData) throws IOException {
+	public void setControllerLayout(String controllerID, List<LayoutData> layoutData) throws IOException {
 		repository.setControllerLayout(controllerID, layoutData);
 	}
 
@@ -43,4 +45,16 @@ public class LayoutManagerImpl implements LayoutManager {
 		this.proxy = proxy;
 	}
 
+	@Override
+	public Map<String, List<LayoutData>> getAllLayout() {
+		return repository.getAll();
+	}
+
+	@Override
+	public UpdateResult update(Map<String, List<LayoutData>> data, boolean overWriteAll) {
+		return repository.update(data, overWriteAll);
+	}
+
+	
+	
 }

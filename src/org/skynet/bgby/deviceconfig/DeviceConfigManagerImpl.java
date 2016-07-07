@@ -1,5 +1,9 @@
 package org.skynet.bgby.deviceconfig;
 
+import java.util.List;
+import java.util.Map;
+
+import org.skynet.bgby.command.management.UpdateResult;
 import org.skynet.bgby.driverproxy.DPModuleException;
 import org.skynet.bgby.driverproxy.DPModuleStatusReporter;
 import org.skynet.bgby.driverproxy.DriverProxyService;
@@ -42,4 +46,15 @@ public class DeviceConfigManagerImpl implements DeviceConfigManager {
 		// so far nothing to do when stop
 	}
 
+	@Override
+	public Map<String, DeviceConfigData> listAllDevices() {
+		return repository.getAll();
+	}
+
+	@Override
+	public UpdateResult update(Map<String, DeviceConfigData> data, boolean overWriteAll) {
+		return repository.update(data, overWriteAll);
+	}
+
+	
 }

@@ -2,6 +2,8 @@ package org.skynet.bgby.protocol;
 
 import java.util.Map;
 
+import fi.iki.elonen.NanoHTTPD.Method;
+
 public interface IRestRequest {
 	
 	String getRequestUri();
@@ -24,4 +26,6 @@ public interface IRestRequest {
 
 	void setRequestUri(String requestUri);
 
+	void setMethod(Method method);
+	Method getMethod();
 }

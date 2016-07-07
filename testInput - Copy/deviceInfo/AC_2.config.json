@@ -1,0 +1,12 @@
+{
+	ID: "AC-2",
+	profile: "Honeywell.HGW2000.485HVAC",
+	identity: {
+		"ipAddress":"127.0.0.1",
+		"id" : 102
+	},
+	extParams: {
+		userName: "admin",
+		password: "123456"
+	}
+}

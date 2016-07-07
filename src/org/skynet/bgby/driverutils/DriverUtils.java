@@ -80,6 +80,16 @@ public class DriverUtils {
 		}
 	}
 
+	public static double getAsDouble(Object obj, double defValue){
+		if (obj instanceof String){
+			return Double.valueOf((String) obj).doubleValue();
+		}else if (obj instanceof Number){
+			return ((Number) obj).doubleValue();
+		}else{
+			return defValue;
+		}
+	}
+	
 	public static boolean getAsBoolean(Object obj, boolean defVal) {
 		if (obj instanceof Boolean){
 			return ((Boolean) obj).booleanValue();

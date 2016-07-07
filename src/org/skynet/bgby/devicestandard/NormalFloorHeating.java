@@ -1,5 +1,7 @@
 package org.skynet.bgby.devicestandard;
 
+import org.skynet.bgby.error.ErrorCode;
+
 public class NormalFloorHeating extends DeviceStandardBaseImpl {
 
 	public static final String CMD_GET_ROOM_TEMPERATURE = "getRoomTemperature";
@@ -17,8 +19,8 @@ public class NormalFloorHeating extends DeviceStandardBaseImpl {
 	public static final String TERM_SET_TEMPERATURE_RANGE = "temperatureSettingRange";
 
 
-	public static final int ERR_CONNECT_TO_GATEWAY = ERR_FLOORHEATING_START_CODE + 1;
-	public static final int ERR_SET_TEMP_OUT_OF_RANGE = ERR_FLOORHEATING_START_CODE + 2;
+	public static final int ERR_CONNECT_TO_GATEWAY = ErrorCode.FLOORHEATING_START_CODE + 1;
+	public static final int ERR_SET_TEMP_OUT_OF_RANGE = ErrorCode.FLOORHEATING_START_CODE + 2;
 
 	public NormalFloorHeating() {
 		super();

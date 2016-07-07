@@ -12,4 +12,7 @@ public interface IRestClient {
 
 	void asynchRequest(InetSocketAddress serverAddress, String contentRoot, IRestRequest request,
 			IRestClientCallback callback);
+
+	IHttpResponse synchPost(InetSocketAddress serverAddress, String contentRoot, IRestRequest request,
+			byte[] postContent) throws IOException;
 }

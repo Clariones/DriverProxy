@@ -268,6 +268,29 @@ public abstract class RestClientBaseImpl implements IRestClient {
 		IHttpResponse response = sendRequestAndWaitResponse(conn);
 		return response;
 	}
+	
+	@Override
+	public IHttpResponse synchPost(InetSocketAddress serverAddress, String contentRoot, IRestRequest request, byte[] postContent)
+			throws IOException {
+		if (request == null || postContent == null || postContent.length == 0) {
+			DriverUtils.log(Level.SEVERE, TAG, "No request or post-content for restful http client");
+			throw new IOException("Cannot got post data");
+		}
+		String url = makeUrl(serverAddress, contentRoot, request);
+		URL requestUrl = new URL(url);
+		HttpURLConnection conn = (HttpURLConnection) requestUrl.openConnection();
+		conn.setDoInput(true);
+		conn.setDoOutput(true);
+		conn.setUseCaches(false);
+		conn.setRequestMethod("POST");
+		conn.setConnectTimeout(getConnectionTimeout());
+		conn.setRequestProperty("Content-Length", String.valueOf(postContent.length));
+		conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+		conn.setReadTimeout(getReadTimeout());
+		conn.getOutputStream().write(postContent);
+		IHttpResponse response = sendRequestAndWaitResponse(conn);
+		return response;
+	}
 
 	protected String urlEncode(String contentRoot) {
 		// TODO Auto-generated method stub

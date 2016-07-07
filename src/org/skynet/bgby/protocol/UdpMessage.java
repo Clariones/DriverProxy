@@ -15,6 +15,7 @@ public class UdpMessage {
 	public static final String CMD_UPDATE_CONFIG = "update_configration";
 	public static final String CMD_DEVICE_ONLINE = "device_online";
 	public static final String CMD_DEVICE_STATUS_REPORT = "device_report";
+	public static final String CMD_HEART_BEAT = "heart_beat";
 	
 	public static final String APP_PC_TOOL = "pc_tool";
 	public static final String APP_DRIVER_PROXY = "driver";
