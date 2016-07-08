@@ -6,8 +6,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.skynet.bgby.devicedriver.honeywell.ExecutionResult;
 import org.skynet.bgby.devicedriver.honeywell.HGW2000Controller;
-import org.skynet.bgby.devicedriver.honeywell.Hgw2000DriverConfig;
-import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.driverproxy.ExecutionContext;
 import org.skynet.bgby.protocol.IRestResponse;
 

@@ -5,11 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.skynet.bgby.deviceprofile.DeviceProfile;
 import org.skynet.bgby.driverutils.SimpleFileRepository;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class DeviceStatusFileRepository extends SimpleFileRepository<DeviceStatus> implements DeviceStatusRepository {
 
@@ -61,6 +57,11 @@ public class DeviceStatusFileRepository extends SimpleFileRepository<DeviceStatu
 		if (data.getProfile() == null){
 			throw new IOException("DeviceStatus " + data.getID()+" without profile");
 		}
+	}
+
+	@Override
+	public void removeDevice(String deviceId) {
+		this.deleteData(deviceId);
 	}
 
 

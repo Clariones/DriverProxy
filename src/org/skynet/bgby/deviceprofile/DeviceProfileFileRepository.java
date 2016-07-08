@@ -7,9 +7,6 @@ import java.io.InputStreamReader;
 
 import org.skynet.bgby.driverutils.SimpleFileRepository;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 public class DeviceProfileFileRepository extends SimpleFileRepository<DeviceProfile> implements DeviceProfileRepository {
 	@Override
 	public DeviceProfile getDeviceProfile(String profileID) {

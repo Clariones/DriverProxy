@@ -1,0 +1,9 @@
+{
+  "ID": "室内PM2.5",
+  "profile": "SomeCompany.SomeType.SomeSensor",
+  "status": {
+    "measureLevel": "bad",
+    "measureValue": 439.0,
+    "unit": "kug/m3"
+  }
+}

@@ -90,6 +90,15 @@
         },
         "layoutContent": [
           {
+            "type": "simpleSensor",
+            "params": {
+              "deviceID": "室内PM2.5",
+              "atRow": 1.0,
+              "atCol": 1.0,
+              "hasRows": 1.0,
+              "hasCols": 1.0
+            }
+          },{
             "type": "normalHVAC",
             "params": {
               "deviceID": "AC-3",

@@ -1,15 +1,9 @@
 package org.skynet.bgby.driverutils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 
 import org.skynet.bgby.protocol.IRestRequest;
 

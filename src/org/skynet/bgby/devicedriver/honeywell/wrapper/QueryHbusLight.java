@@ -1,15 +1,11 @@
 package org.skynet.bgby.devicedriver.honeywell.wrapper;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.skynet.bgby.deviceconfig.DeviceConfigData;
 import org.skynet.bgby.devicedriver.honeywell.ExecutionResult;
 import org.skynet.bgby.devicedriver.honeywell.HGW2000Controller;
 import org.skynet.bgby.devicedriver.honeywell.Hgw2000;
-import org.skynet.bgby.devicedriver.honeywell.wrapper.ControlHbusLight.HBusLightArgs;
-import org.skynet.bgby.devicestandard.SimpleDimmer;
-import org.skynet.bgby.devicestandard.SimpleLight;
 import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.driverproxy.ExecutionContext;
 import org.skynet.bgby.driverutils.DriverUtils;

@@ -1,7 +1,6 @@
 package org.skynet.bgby.devicestatus;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public interface DeviceStatusRepository {
@@ -11,5 +10,7 @@ public interface DeviceStatusRepository {
 	void updateDeviceStatus(DeviceStatus deviceStatus) throws IOException;
 
 	Map<String, DeviceStatus> getAll();
+
+	void removeDevice(String deviceId);
 
 }

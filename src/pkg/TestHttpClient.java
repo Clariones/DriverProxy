@@ -2,7 +2,6 @@ package pkg;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
@@ -15,7 +14,6 @@ import org.skynet.bgby.protocol.RestRequestImpl;
 import org.skynet.bgby.restserver.RestClientBaseImpl;
 
 import com.google.gson.Gson;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.LocalAttribute;
 
 public class TestHttpClient {
 

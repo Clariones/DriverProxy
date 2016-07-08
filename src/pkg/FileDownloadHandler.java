@@ -1,10 +1,9 @@
 package pkg;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
-import org.skynet.bgby.protocol.IRestRequest;
 import org.skynet.bgby.protocol.IHttpResponse;
+import org.skynet.bgby.protocol.IRestRequest;
 import org.skynet.bgby.restserver.IRestRequestHandler;
 
 public class FileDownloadHandler implements IRestRequestHandler{

@@ -1,7 +1,6 @@
 package org.skynet.bgby.devicestatus;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import org.skynet.bgby.driverproxy.DPModuleException;
@@ -50,6 +49,11 @@ public class DeviceStatusManagerImpl implements DeviceStatusManager {
 	@Override
 	public void setDriverProxy(DriverProxyService proxy) {
 		this.proxy=proxy;
+	}
+
+	@Override
+	public void removeDevice(String deviceId) {
+		repository.removeDevice(deviceId);
 	}
 
 }

@@ -25,6 +25,7 @@ import org.skynet.bgby.devicestandard.NormalFloorHeating;
 import org.skynet.bgby.devicestandard.NormalHVAC;
 import org.skynet.bgby.devicestandard.SimpleDimmer;
 import org.skynet.bgby.devicestandard.SimpleLight;
+import org.skynet.bgby.devicestandard.SimpleSensor;
 import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.devicestatus.DeviceStatusManager;
 import org.skynet.bgby.driverutils.DriverUtils;
@@ -95,6 +96,7 @@ public class DriverProxyService {
 		deviceStandards.put(SimpleLight.ID, new SimpleLight());
 		deviceStandards.put(SimpleDimmer.ID, new SimpleDimmer());
 		deviceStandards.put(NormalFloorHeating.ID, new NormalFloorHeating());
+		deviceStandards.put(SimpleSensor.ID, new SimpleSensor());
 	}
 	protected DriverProxyConfiguration config;
 	protected DeviceDriverCommandHandler deviceCommandHandler;

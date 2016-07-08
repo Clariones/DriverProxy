@@ -55,6 +55,8 @@ public abstract class DriverManagerImpl implements DriverManager {
 		Object cfgObject = gson.fromJson(config.getConfigurationData(), cfgClass);
 		driver.setConfig(cfgObject);
 		driver.setID(config.getID());
+		driver.setDeviceStatusManager(getDeviceStatusManager());
+		driver.setDeviceProfileManager(getDeviceProfileManager());
 		holdDriver(config.getID(), driver);
 	}
 
@@ -100,19 +102,37 @@ public abstract class DriverManagerImpl implements DriverManager {
 
 	protected void initDriverStatus() throws DPModuleException {
 		 Map<String, DeviceStatus> deviceStatus = deviceStatusManager.listAllDevices();
-		if (deviceStatus == null || deviceStatus.isEmpty()){
-			return;
-		}
+		 
+		if (deviceStatus != null && !deviceStatus.isEmpty()){
 		for (DeviceStatus device : deviceStatus.values()) {
-			DeviceConfigData config = getDeviceConfigManager().getDeviceConfigData(device.getID());
-			DeviceDriver driver = lookupDriverForDevice(device.getID(), device, config);
+			String deviceId = device.getID();
+			DeviceConfigData config = getDeviceConfigManager().getDeviceConfigData(deviceId);
+			if (config == null){
+				// this device is no longer existed
+				deviceStatusManager.removeDevice(deviceId);
+			}
+		}
+		}
+		
+		Map<String, DeviceConfigData> cfgedDevies = deviceConfigManager.listAllDevices();
+		for(DeviceConfigData cfgDevice : cfgedDevies.values()){
+			String deviceId = cfgDevice.getID();
+			DeviceStatus device = deviceStatusManager.getDevice(deviceId);
+			DeviceDriver driver = lookupDriverForDevice(deviceId, device, cfgDevice);
 			if (driver == null){
 				String msg = String.format("Cannot found any driver for device %s(%s,%s)",
-						device.getID(), device.getProfile(), config.getIdentity());
+						cfgDevice.getID(), cfgDevice.getProfile(), cfgDevice.getIdentity());
 				DriverUtils.log(Level.SEVERE, TAG, msg);
 				throw new DPModuleException(msg);
 			}
-			driver.initStatus(device.getProfile(), config.getIdentity(), device.getStatus());
+			DeviceProfile profile = getDeviceProfileManager().getProfile(cfgDevice.getProfile());
+//			driver.initStatus(device.getProfile(), config.getIdentity(), device.getStatus());
+			try {
+				driver.initStatus(profile, cfgDevice, device);
+			} catch (DeviceDriverException e) {
+				e.printStackTrace();
+				throw new DPModuleException("Exceptin when intial device driver", e);
+			}
 		}
 	}
 
@@ -194,7 +214,10 @@ public abstract class DriverManagerImpl implements DriverManager {
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
-
+		if (driverList != null){
+			for(DeviceDriver driver: driverList){
+				driver.onStop();
+			}
+		}
 	}
 }

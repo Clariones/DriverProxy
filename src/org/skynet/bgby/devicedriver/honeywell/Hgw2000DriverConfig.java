@@ -4,7 +4,14 @@ public class Hgw2000DriverConfig {
 	protected String defaultUserName;
 	protected String defaultPassword;
 	protected int defaultPort;
+	protected int devicePollingTime = 0;
 	
+	public int getDevicePollingTime() {
+		return devicePollingTime;
+	}
+	public void setDevicePollingTime(int devicePollingTime) {
+		this.devicePollingTime = devicePollingTime;
+	}
 	public int getDefaultPort() {
 		return defaultPort;
 	}

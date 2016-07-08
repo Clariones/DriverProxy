@@ -1,9 +1,6 @@
 package org.skynet.bgby.restserver;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -11,10 +8,10 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.skynet.bgby.driverutils.DriverUtils;
-import org.skynet.bgby.protocol.IRestRequest;
-import org.skynet.bgby.protocol.IHttpResponse;
-import org.skynet.bgby.protocol.RestRequestCodec;
 import org.skynet.bgby.protocol.HttpResponseImpl;
+import org.skynet.bgby.protocol.IHttpResponse;
+import org.skynet.bgby.protocol.IRestRequest;
+import org.skynet.bgby.protocol.RestRequestCodec;
 
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;

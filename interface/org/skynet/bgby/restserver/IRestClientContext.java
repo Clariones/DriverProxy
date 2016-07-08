@@ -2,8 +2,8 @@ package org.skynet.bgby.restserver;
 
 import java.net.InetSocketAddress;
 
-import org.skynet.bgby.protocol.IRestRequest;
 import org.skynet.bgby.protocol.IHttpResponse;
+import org.skynet.bgby.protocol.IRestRequest;
 
 public interface IRestClientContext {
 

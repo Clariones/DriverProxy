@@ -1,7 +1,5 @@
 package org.skynet.bgby.driverutils;
 
-import static org.junit.Assert.*;
-
 import java.util.logging.Logger;
 
 import org.junit.Test;

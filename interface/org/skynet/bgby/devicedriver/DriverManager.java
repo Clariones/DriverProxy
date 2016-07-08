@@ -1,7 +1,5 @@
 package org.skynet.bgby.devicedriver;
 
-import java.util.Map;
-
 import org.skynet.bgby.deviceconfig.DeviceConfigData;
 import org.skynet.bgby.deviceconfig.DeviceConfigManager;
 import org.skynet.bgby.deviceprofile.DeviceProfileManager;

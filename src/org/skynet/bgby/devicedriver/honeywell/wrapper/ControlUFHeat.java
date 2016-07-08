@@ -9,7 +9,6 @@ import org.skynet.bgby.deviceconfig.DeviceConfigData;
 import org.skynet.bgby.devicedriver.honeywell.ExecutionResult;
 import org.skynet.bgby.devicedriver.honeywell.HGW2000Controller;
 import org.skynet.bgby.devicedriver.honeywell.Hgw2000;
-import org.skynet.bgby.devicedriver.honeywell.Hgw2000DriverConfig;
 import org.skynet.bgby.devicestandard.NormalFloorHeating;
 import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.driverproxy.ExecutionContext;

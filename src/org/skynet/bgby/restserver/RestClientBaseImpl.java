@@ -20,9 +20,9 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import org.skynet.bgby.driverutils.DriverUtils;
-import org.skynet.bgby.protocol.IRestRequest;
-import org.skynet.bgby.protocol.IHttpResponse;
 import org.skynet.bgby.protocol.HttpResponseImpl;
+import org.skynet.bgby.protocol.IHttpResponse;
+import org.skynet.bgby.protocol.IRestRequest;
 
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;

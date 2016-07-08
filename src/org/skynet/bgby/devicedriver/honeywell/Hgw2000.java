@@ -3,12 +3,15 @@ package org.skynet.bgby.devicedriver.honeywell;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import org.skynet.bgby.deviceconfig.DeviceConfigData;
+import org.skynet.bgby.devicedriver.DeviceDriver;
 import org.skynet.bgby.devicedriver.DeviceDriverBaseImpl;
 import org.skynet.bgby.devicedriver.DeviceDriverException;
 import org.skynet.bgby.devicedriver.honeywell.wrapper.HGWDriverWrapper;
 import org.skynet.bgby.deviceprofile.DeviceProfile;
+import org.skynet.bgby.devicestandard.DeviceStandardBaseImpl;
 import org.skynet.bgby.devicestatus.DeviceStatus;
 import org.skynet.bgby.driverproxy.ExecutionContext;
 import org.skynet.bgby.driverutils.DriverUtils;
@@ -38,7 +41,7 @@ import org.skynet.bgby.protocol.RestResponseImpl;
 public class Hgw2000 extends DeviceDriverBaseImpl {
 
 	interface HgwCmdHandler {
-		IRestResponse handleCmd(Hgw2000 standardDriver, HGW2000Controller driver, DeviceStatus status,
+		IRestResponse handleCmd(DeviceDriver standardDriver, HGW2000Controller driver, DeviceStatus status,
 				Map<String, String> params);
 	}
 
@@ -50,13 +53,11 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 		// standard: TBD
 		HBUS_HBUS_CURTAIN("Honeywell.HGW2000.HBus_Curtain"),
 		// standard: SimpleDimer, SimpleLight
-		HBUS_LIGHT_M1("Honeywell.HGW2000.Maia_I_HBus_Light"),
-		HBUS_LIGHT_M2("Honeywell.HGW2000.Maia_II_HBus_Light"),
+		HBUS_LIGHT_M1("Honeywell.HGW2000.Maia_I_HBus_Light"), HBUS_LIGHT_M2("Honeywell.HGW2000.Maia_II_HBus_Light"),
 		// standard: NormalHVAC
 		HVAC("Honeywell.HGW2000.485HVAC"),
 		// standard: SimpleLight
-		LIGHT_M1("Honeywell.HGW2000.Maia_I_Light"),
-		LIGHT_M2("Honeywell.HGW2000.Maia_II_Light");
+		LIGHT_M1("Honeywell.HGW2000.Maia_I_Light"), LIGHT_M2("Honeywell.HGW2000.Maia_II_Light");
 
 		public static Profile byName(String name) {
 			for (Profile p : values()) {
@@ -164,12 +165,6 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 	}
 
 	@Override
-	public void initStatus(String profile, Map<String, Object> identity, Map<String, Object> status) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public IRestResponse onCommand(ExecutionContext executionContext) throws DeviceDriverException {
 		HGW2000Controller driver = getDriver(executionContext.getConfig());
 		HGWDriverWrapper wrapper = Helper.getCommandWrapper(executionContext.getProfile().getID(),
@@ -188,6 +183,58 @@ public class Hgw2000 extends DeviceDriverBaseImpl {
 	@Override
 	public void setConfig(Object cfgObject) {
 		driverConfig = (Hgw2000DriverConfig) cfgObject;
+	}
+
+	@Override
+	public boolean isNeedPollingDevice(DeviceProfile profile) {
+		Profile devProfile = Profile.byName(profile.getID());
+		if (devProfile == null) {
+			throw new RuntimeException("Unknown profile for HGW2000: " + profile.getID());
+		}
+		switch (devProfile) {
+		case FLOOR_HEATING:
+		case HVAC:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	@Override
+	public DeviceStatus pollingDevice(DeviceConfigData device) {
+		try {
+			HGW2000Controller hgwCtrller = getDriver(device);
+			Profile devProfile = Profile.byName(device.getProfile());
+			String command = DeviceStandardBaseImpl.CMD_GET_ALL;
+			HGWDriverWrapper wrapper = Helper.getCommandWrapper(device.getProfile(), command);
+			if (wrapper == null) {
+				throw new Exception("Why I cannot found wrapper for " + device.getProfile());
+			}
+			ExecutionContext executionContext = new ExecutionContext();
+			executionContext.setCommand(command);
+			executionContext.setConfig(device);
+			DeviceStatus devieStatus = new DeviceStatus();
+			devieStatus.setID(device.getID());
+			devieStatus.setProfile(device.getProfile());
+			executionContext.setDevice(devieStatus);
+			executionContext.setProfile(getDeviceProfileManager().getProfile(device.getProfile()));
+			IRestResponse response = wrapper.execute(hgwCtrller, executionContext);
+			// System.out.println(response);
+			if (response.getErrorCode() != 0) {
+				DriverUtils.log(Level.WARNING, TAG, "Error when query " + device.getID() + ": ["
+						+ response.getErrorCode() + "]" + response.getResult());
+				return null;
+			}
+			return executionContext.getDevice();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public long getDevicePollingPeriod() {
+		return driverConfig.getDevicePollingTime();
 	}
 
 }

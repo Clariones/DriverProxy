@@ -1,8 +1,6 @@
 package org.skynet.bgby.deviceprofile;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DeviceProfileManagerPCImpl extends DeviceProfileManagerImpl {
 	

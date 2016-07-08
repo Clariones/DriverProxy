@@ -5,6 +5,7 @@
 	configurationData: {
 		defaultUserName: "admin",
 		defaultPassword: "123456",
+		devicePollingTime: 5000,
 		defaultPort: 10099
 	}
 }

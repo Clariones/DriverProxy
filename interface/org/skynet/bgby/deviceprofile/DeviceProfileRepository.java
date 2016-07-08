@@ -1,6 +1,5 @@
 package org.skynet.bgby.deviceprofile;
 
-import java.util.List;
 import java.util.Map;
 
 import org.skynet.bgby.command.management.UpdateResult;

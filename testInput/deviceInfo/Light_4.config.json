@@ -2,7 +2,7 @@
   "ID": "Light-4",
   "profile": "Honeywell.HGW2000.Maia_II_Light",
   "identity": {
-    "ipAddress": "127.0.0.1",
+    "ipAddress": "192.168.2.103",
     "id": 4.0
   },
   "extParams": {
