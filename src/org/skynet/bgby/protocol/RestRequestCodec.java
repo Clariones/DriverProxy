@@ -74,7 +74,6 @@ public class RestRequestCodec {
 		if (body.get("postData") != null) {
 			String data = body.get("postData");
 			params.put("post_body", data);
-			System.out.println(data);
 			DriverUtils.log(Level.FINE, TAG, "Post data length is " + data.getBytes().length);
 			return;
 		}

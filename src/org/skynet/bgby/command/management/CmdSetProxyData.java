@@ -130,13 +130,13 @@ public class CmdSetProxyData extends BaseManageCmd implements IRestCommandHandle
 			data = loadJsonFromRequest(restRequest, new TypeToken<Map<String, List<LayoutData>>>(){});
 		}catch (Exception e){
 			result.setErrorCode(ERR_INVALID_JSON_SYNTAX);
-			result.setResult("Posted Layout JSON has syntax error");
+			result.setResult("Post JSON has syntax error");
 			result.setData(DriverUtils.dumpExceptionToString(e));
 			return;
 		}
 		if (data == null || data.isEmpty()){
 			result.setErrorCode(ERR_EMPTY_JSON_CONTENT);
-			result.setResult("Posted Layout content has no any valid data");
+			result.setResult("Post content has no any valid data");
 			return;
 		}
 		UpdateResult opResult = getLayoutManager().update(data, overWriteAll);
